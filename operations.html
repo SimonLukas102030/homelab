@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operations — Homelab — IT Hub</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html" class="active">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Operations</h1>
+    <p class="lead">Getting a rack server quiet enough for the bedroom — stock fans are torture, Noctua mod + IPMI override are mandatory. Plus: GPU cooling for the Tesla P40, power draw in detail, maintenance routines, disaster recovery, security basics.</p>
+  </header>
+
+  <!-- ===== NOISE ===== -->
+  <section class="section" id="noise">
+    <h2><span class="num">01</span>Noise — The Sore Point of Rack Servers</h2>
+
+    <div class="prose">
+      <p>Your desired comfort level: "Lian Li at full load", i.e. <strong>~35–40 dB(A)</strong>. Stock rack servers are far above that. Without a mod an R720/R730/R740 is unusable in a bedroom.</p>
+
+      <h3>Why stock fans are so loud</h3>
+      <ul>
+        <li><strong>60 mm fans must spin fast</strong> to achieve airflow — smaller diameter = more RPM needed for the same CFM.</li>
+        <li><strong>iDRAC logic</strong> ramps fans aggressively when:
+          <ul>
+            <li>Non-Dell components are detected (e.g. Tesla P40, custom NVMe, third-party RAM)</li>
+            <li>Any sensor exceeds an aggressive temperature threshold</li>
+            <li>Power profile is set to "Performance" instead of "Custom"</li>
+          </ul>
+        </li>
+        <li><strong>Servers are designed for datacenters</strong>, not living spaces — you can't hear anything there over thousands of other servers anyway.</li>
+      </ul>
+
+      <h3>dB(A) comparison</h3>
+      <table class="tbl">
+        <thead>
+          <tr><th>Setup</th><th>Idle</th><th>Load</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>R720/R730 stock (factory fans)</td>            <td class="num">52–58 dB(A)</td><td class="num">65+ dB(A)</td></tr>
+          <tr><td>R720/R730 stock + iDRAC override "minimum"</td><td class="num">42–46 dB(A)</td><td class="num">55+ dB(A)</td></tr>
+          <tr><td><strong>R720/R730 + Noctua iPPC-3000</strong></td><td class="num"><strong>30–34 dB(A)</strong></td><td class="num">42–46 dB(A)</td></tr>
+          <tr><td><strong>R720/R730 + Noctua A6x25 PWM (limited)</strong></td><td class="num"><strong>26–30 dB(A)</strong></td><td class="num">38–42 dB(A)</td></tr>
+          <tr><td>R740 stock + override</td>                    <td class="num">38–42 dB(A)</td><td class="num">48+ dB(A)</td></tr>
+          <tr><td><strong>R740 + Noctua mod</strong></td>       <td class="num"><strong>26–30 dB(A)</strong></td><td class="num">35–40 dB(A)</td></tr>
+        </tbody>
+      </table>
+
+      <p>For reference: 30 dB(A) = quiet room background hum, 35 dB(A) = library, 40 dB(A) = quiet office. Lian Li at full load sits at roughly 35–40.</p>
+    </div>
+
+    <div class="callout danger">
+      <span class="icon">!</span>
+      <div class="body"><strong>Straight talk:</strong> even after the mod a rack server is <strong>louder</strong> than a DIY tower with Noctua fans. If absolute silence in the bedroom is critical for you, a tower (Fractal Define R5/7) is quieter. What you gain with a rack setup: looks, modularity, ECC RAM support, per-outlet power control. What you lose: ~10 dB(A) compared to a tower.</div>
+    </div>
+  </section>
+
+  <!-- ===== FAN MOD — STEP-BY-STEP ===== -->
+  <section class="section" id="fan-mod">
+    <h2><span class="num">02</span>Fan Mod — Step-by-Step</h2>
+
+    <div class="prose">
+      <h3>Option A — Install Noctua fans directly</h3>
+      <p>Fan size differs per server generation:</p>
+      <ul>
+        <li><strong>R720/R730 (2U)</strong> — 6× 60 mm hot-swap fans. Replacement: <strong>Noctua NF-A6x25 PWM</strong> (60 mm, ~€18/each, max 3000 RPM, 19.3 dB(A) at 100%).</li>
+        <li><strong>R740 (2U)</strong> — 6× 60 mm hot-swap fans. Same replacement.</li>
+        <li><strong>4U server (Supermicro 846)</strong> — 80 mm fans. Noctua NF-A8 PWM (~€22/each).</li>
+      </ul>
+
+      <h3>Step-by-step (R730, 6× NF-A6x25)</h3>
+      <ol class="steps">
+        <li><strong>Shut down the server</strong>, disconnect power (both PSUs), wait 60 s (residual charge).</li>
+        <li><strong>Pull hot-swap fans</strong> — all 6 at the top of the server, each with a lever latch. Dell fans have a proprietary 5-pin connector (5 pins for RPM value + status signal).</li>
+        <li><strong>Cut the connector off</strong> leaving ~5 cm of cable on the connector side. You'll splice this onto the Noctua pins.</li>
+        <li><strong>Document pinout</strong>:
+          <ul>
+            <li>Dell: 1=GND (black), 2=+12V (red), 3=Tach (yellow), 4=PWM (blue), 5=ID (often green)</li>
+            <li>Noctua: 1=GND, 2=+12V, 3=Tach, 4=PWM (standard PWM, only 4 pins)</li>
+            <li>Pin 5 (Dell ID) left unconnected — iDRAC accepts "no ID" as long as the fan delivers valid tach values</li>
+          </ul>
+        </li>
+        <li><strong>Solder</strong>: Dell connector onto Noctua cable. Heat-shrink tubing, heat gun.</li>
+        <li><strong>Re-insert fans</strong> into the hot-swap mount. Keep track of slot positions (some slots carry sensor IDs).</li>
+        <li><strong>Reconnect PSUs, boot.</strong> iDRAC will now show under "System Health → Cooling": fans running with tach values, but the system gets nervous and spins up due to tach-value mismatch from expected.</li>
+        <li><strong>Activate IPMI override</strong> (next block) — otherwise everything runs at 100%.</li>
+      </ol>
+
+      <p><strong>Buy adapter cables:</strong> search eBay for <code>"Dell PowerEdge fan adapter Noctua"</code> — modders sell ready-made adapter cables with Dell connector to 4-pin PWM header. Costs ~€15–20 instead of soldering yourself. Model-specific (R720 vs R730 vs R740 differ!).</p>
+
+      <h3>Option B — IPMI override <em>without</em> fan mod</h3>
+      <p>Weaker but free: use <code>ipmitool raw</code> to force the stock fans to lower RPM manually. Gets you ~10 dB(A), but fans are still loud at 60% speed (which you need, because 60 mm is just 60 mm).</p>
+
+      <pre><code># On the Proxmox host
+apt install ipmitool
+
+# Enable manual fan control (instead of iDRAC auto)
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P calvin raw 0x30 0x30 0x01 0x00
+
+# Set speed — 0x14 = 20%, 0x32 = 50%
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P calvin raw 0x30 0x30 0x02 0xff 0x14
+
+# Re-enable auto
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P calvin raw 0x30 0x30 0x01 0x01</code></pre>
+
+      <p><strong>Warning:</strong> manual override ignores temperature — under heat the server stays at low RPM and potentially overheats. Solution: a <strong>temperature watchdog script</strong> on the Proxmox host that re-enables auto mode when temperature hits critical.</p>
+
+      <pre><code>#!/bin/bash
+# /usr/local/bin/fan-watchdog.sh
+IDRAC=192.168.20.50
+USER=root
+PASS=calvin
+THRESHOLD=70  # °C
+
+cpu_temp=$(ipmitool -I lanplus -H $IDRAC -U $USER -P $PASS sdr type temperature \
+  | grep -oP "(?&lt;=Temp.*\| )\d+" | sort -nr | head -1)
+
+if [ "$cpu_temp" -gt "$THRESHOLD" ]; then
+  ipmitool -I lanplus -H $IDRAC -U $USER -P $PASS raw 0x30 0x30 0x01 0x01
+  logger "fan-watchdog: temp ${cpu_temp}°C - AUTO mode"
+fi</code></pre>
+
+      <p>Run as a systemd timer every 60 s.</p>
+    </div>
+  </section>
+
+  <!-- ===== GPU COOLING ===== -->
+  <section class="section">
+    <h2><span class="num">03</span>GPU Cooling — Tesla P40 is Passive!</h2>
+
+    <div class="prose">
+      <p>The Tesla P40 was designed for datacenter servers — it has <strong>no fans of its own</strong> and relies on server airflow from front to back passing through it. In a typical R730 setup this works fine, BUT: after the Noctua fan mod airflow is no longer sufficient (Noctua iPPC are quieter → less CFM).</p>
+
+      <h3>Solution — 3D-printed shroud + 80 mm fan</h3>
+      <p>There are <strong>ready-made STL files</strong> on Thingiverse / Printables for "Tesla P40 fan shroud". The adapter form attaches to the back of the GPU and holds a standard 80 mm fan that draws air through the card.</p>
+      <ul>
+        <li><strong>STL files:</strong> search "Tesla P40 fan shroud" on <a href="https://www.printables.com">printables.com</a> — various models, ~€2 to print locally or ~€8 finished via JLCPCB</li>
+        <li><strong>80 mm fan:</strong> Noctua NF-A8 PWM (~€22) or Arctic P8 PWM (~€8) — both quiet, P8 is sufficient for the P40 (250 W TDP, lots of heat but no hot-spot like a GPU die)</li>
+        <li><strong>Mounting:</strong> screw directly to the shroud, power from a mainboard FAN header or PSU Molex (with step-down to PWM via adapter)</li>
+        <li><strong>Power connector P40:</strong> CPU 8-pin with adjusted pinout (4× GND instead of 5× GND like Dell riser default). Adapter cable ~€15 on eBay, search "Dell P40 power adapter"</li>
+      </ul>
+
+      <h3>RTX 3090 — no mod needed</h3>
+      <p>The 3090 has its own fans (triple-slot card with 2–3 fans). Sufficient in a server case with good airflow. But: triple-slot means blocking PCIe slots — very tight in the R740 with a GPU riser, check before buying. Alternative: <strong>blower-style 3090</strong> (Gigabyte Turbo, MSI Aero) — single-slot exhaust out the back, ideal for servers, but rare and expensive used.</p>
+    </div>
+  </section>
+
+  <!-- ===== POWER ===== -->
+  <section class="section">
+    <h2><span class="num">04</span>Power Draw &amp; Tuning</h2>
+
+    <div class="prose">
+      <h3>Realistic watt profiles</h3>
+      <table class="tbl">
+        <thead>
+          <tr><th>Tier</th><th>Idle</th><th>Plex 1080p</th><th>2× MC + Plex</th><th>+ AI workload</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Entry (R720, no GPU)</td>     <td class="num">~80 W</td><td class="num">100 W</td><td class="num">160 W</td><td class="num">—</td></tr>
+          <tr><td>Medium (R730 + P40)</td>             <td class="num">~55 W (GPU idle)</td><td class="num">85 W</td><td class="num">140 W</td><td class="num">280 W (P40 full)</td></tr>
+          <tr><td>Pro (R740 + 3090)</td>               <td class="num">~70 W</td><td class="num">100 W</td><td class="num">160 W</td><td class="num">450 W (3090 full)</td></tr>
+        </tbody>
+      </table>
+
+      <p>GPU idle is the big factor: P40 idle ~10 W (good!), 3090 idle ~25 W (acceptable). When the GPU is not actively used, server idle figures are similar to running without one.</p>
+
+      <h3>Annual electricity cost at €0.30/kWh</h3>
+      <p>Assumption: 70% of time idle, 25% light load, 5% heavy AI. Over 8,760 h:</p>
+      <ul>
+        <li><strong>Entry:</strong> ~700 kWh/year → <strong>~€210/year</strong></li>
+        <li><strong>Medium:</strong> ~480 kWh/year → <strong>~€145/year</strong> (DDR4 saves!)</li>
+        <li><strong>Pro:</strong> ~620 kWh/year → <strong>~€185/year</strong></li>
+      </ul>
+
+      <h3>Tuning for lower idle</h3>
+      <ul>
+        <li><strong>iDRAC power cap</strong> (Web UI → Power → Power Cap): medium tier at 200 W, pro tier at 350 W. Prevents power spikes, nudges idle down slightly.</li>
+        <li><strong>CPU C-states</strong> in BIOS: System Profile → Performance Per Watt (OS) — gives the OS control over C-states.</li>
+        <li><strong>Linux: <code>cpupower frequency-set -g schedutil</code></strong> — responsive but power-efficient.</li>
+        <li><strong>Powertop</strong> on Proxmox host: <code>powertop --auto-tune</code>. Saves 5–8 W.</li>
+        <li><strong>HDD spindown</strong>: <code>hdparm -S 240 /dev/sda</code> (20 min idle → spindown).</li>
+        <li><strong>Unplug 2nd PSU</strong>: redundant PSU not needed at home (power rarely fails). Saves 5–10 W (PSU idle loss).</li>
+        <li><strong>Disable NIC PoE</strong> when not needed (SF300 web UI per port).</li>
+        <li><strong>GPU power limit</strong>: <code>nvidia-smi -pl 200</code> (cap P40 from 250 W to 200 W) — minimal performance loss, ~20% less power.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RACK PLACEMENT ===== -->
+  <section class="section">
+    <h2><span class="num">05</span>Rack Placement in the Bedroom</h2>
+
+    <div class="prose">
+      <h3>Where to place it</h3>
+      <ul>
+        <li><strong>Not directly next to the bed</strong> — heat radiation and fan whine right at ear level.</li>
+        <li><strong>Not in a wall alcove</strong> — heat buildup, fans work harder = louder.</li>
+        <li><strong>Ideally against an exterior wall</strong> — heat dissipation, can vent via window.</li>
+        <li><strong>20+ cm clearance from all walls</strong> — server draws air from the front, exhausts out the back. Rear must be clear.</li>
+        <li><strong>Vibration decoupling from the floor</strong>: felt pads or anti-vibration mounts under the rack feet. Eliminates sub-bass resonance in the floor.</li>
+      </ul>
+
+      <h3>Open-Frame vs. Closed-Rack</h3>
+      <ul>
+        <li><strong>Open-frame</strong> (this setup): 36U open 4-post frame — better ventilation (~5 dB(A) quieter because fans work less against no resistance). DIY side panels bolt to the posts: birch plywood on the left, black pegboard on the right (Command Wall). No rear door = server exhaust straight out the back. Everything exposed, but the side panels add aesthetics without blocking airflow.</li>
+        <li><strong>Closed rack:</strong> potential acoustic lining of inner walls → −2 to −4 dB(A) improvement. Downside: higher cost, heavier, limits rear airflow, and prevents the wood/pegboard side panel aesthetic.</li>
+      </ul>
+
+      <h3>Noise hack — room placement</h3>
+      <p>If 30 dB(A) after the mod is still too much: position the rack in a corner (two walls absorb rear exhaust noise → −2 to −4 dB(A) ambient reduction). A dense curtain or acoustic partition alongside the rack also helps. Open frame has no inner walls to line — room placement and rack distance from the bed are the levers.</p>
+    </div>
+  </section>
+
+  <!-- ===== MAINTENANCE ===== -->
+  <section class="section">
+    <h2><span class="num">06</span>Maintenance — Routines</h2>
+
+    <div class="twocol">
+      <div>
+        <div class="prose">
+          <h3>Weekly (5 min)</h3>
+          <ul>
+            <li>Netdata / Uptime Kuma: all services up?</li>
+            <li>iDRAC health status: all green?</li>
+            <li>MC TPS via Spark — <code>/spark tps</code></li>
+            <li>Disk usage: <code>df -h</code> + <code>zfs list</code></li>
+            <li>GPU temp via <code>nvidia-smi</code>: idle &lt; 50 °C, load &lt; 80 °C</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="prose">
+          <h3>Monthly (30 min)</h3>
+          <ul>
+            <li><code>apt update &amp;&amp; apt upgrade</code> Proxmox host</li>
+            <li>Update VMs/LXCs individually — take ZFS snapshot first</li>
+            <li>Check iDRAC firmware for updates (Dell Support site)</li>
+            <li>Verify backups — random restore test</li>
+            <li>Scan <code>journalctl -p err -b</code></li>
+            <li>SMART on NVMe + HDD: <code>smartctl -a /dev/sda</code></li>
+            <li>Fan health: check tach values in iDRAC</li>
+            <li>Ollama: check for new models / updates</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <h3>Every six months</h3>
+      <ul>
+        <li>Shut server down, blow compressed air through all fans (heatsinks, GPU, PSU). Dust accumulation kills cooling.</li>
+        <li>Renew thermal paste on CPU cooler if &gt; 2 years old (Noctua NT-H2).</li>
+        <li>Backup disaster drill: full restore of a service to a test VM.</li>
+        <li>Run BIOS / iDRAC / GPU driver updates.</li>
+        <li>UPS battery test (if pro tier): manual self-test in APC UI, verify runtime &gt; 10 min under load.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== DR ===== -->
+  <section class="section">
+    <h2><span class="num">07</span>Disaster Recovery</h2>
+
+    <div class="prose">
+      <p>Two failure modes:</p>
+
+      <h3>Mode 1 — Software failure (VM crash, bad update, config damage)</h3>
+      <p>ZFS snapshot rollback (2 seconds). Prerequisite: regular snapshots, at minimum before every update.</p>
+
+      <h3>Mode 2 — Hardware failure (disk dies, RAM ECC errors, dead mainboard, fire)</h3>
+      <p>Restore from off-site backup. No off-site = data gone.</p>
+
+      <h3>3-2-1 rule in practice</h3>
+      <ul>
+        <li><strong>3 copies</strong> of the data</li>
+        <li><strong>2 different media</strong> (NVMe pool + HDD pool in the server, or server + secondary NAS)</li>
+        <li><strong>1 off-site</strong>: <strong>Hetzner Storage Box 1 TB</strong> ~€4/month or <strong>Backblaze B2</strong> ~$0.006/GB/month</li>
+      </ul>
+
+      <h3>Document the recovery plan</h3>
+      <p><code>recovery.md</code> on cloud storage (NOT on the homelab itself). Steps:</p>
+      <ol class="steps">
+        <li>Source replacement hardware (Dell R730 backup stash or tower if necessary)</li>
+        <li>Install Proxmox from ISO</li>
+        <li>Mount cloud backup storage via <code>rclone</code></li>
+        <li>Restore VMs / LXCs from PBS / vzdump backup</li>
+        <li>Reconfigure iDRAC (restore old config from backup if available)</li>
+        <li>Re-register cloudflared tunnel with the same token → tunnel comes back</li>
+        <li>Update DNS in Cloudflare to new internal IP if it changed</li>
+      </ol>
+
+      <h3>Recovery drill</h3>
+      <p>Do a <strong>real test</strong> every six months. Not "I think this works", but: "restored a service to a test machine successfully."</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="icon">⚠</span>
+      <div class="body"><strong>Most important DR point:</strong> do NOT back up <code>cloudflared</code> tunnel credentials (token + cert.pem) on the homelab itself — if the server burns, the files are gone and you can't recreate the tunnel without new Cloudflare configuration. Store the token file <strong>elsewhere</strong> (private GitHub repo, KeePass DB in cloud drive, USB stick in a desk drawer).</div>
+    </div>
+  </section>
+
+  <!-- ===== SECURITY ===== -->
+  <section class="section">
+    <h2><span class="num">08</span>Security Basics</h2>
+
+    <div class="prose">
+      <ul>
+        <li><strong>iDRAC accessible only internally.</strong> Never expose the iDRAC port via Cloudflare Tunnel — known CVEs on older iDRAC firmware.</li>
+        <li><strong>Change iDRAC default password!</strong> "calvin" is the factory default and appears in every pen-test wordlist.</li>
+        <li><strong>Proxmox web UI internal only.</strong> If remote access is needed: Cloudflare Access with OAuth (Google/GitHub login).</li>
+        <li><strong>SSH:</strong> key-only (<code>PasswordAuthentication no</code>). <code>fail2ban</code> for brute-force protection.</li>
+        <li><strong>Enable 2FA</strong> in Proxmox (Datacenter → Permissions → Two Factor → TOTP).</li>
+        <li><strong>Updates monthly.</strong> Plex/Nextcloud more often (CVEs land faster).</li>
+        <li><strong>Nextcloud security scan</strong>: <code>scan.nextcloud.com</code></li>
+        <li><strong>VLAN isolation</strong> (see Networking) — IoT devices cannot reach the server VLAN.</li>
+        <li><strong>Check fail2ban status</strong> regularly: <code>fail2ban-client status sshd</code></li>
+        <li><strong>Cloudflare Access</strong> in front of admin areas → 2FA via Cloudflare OAuth, never direct login to Proxmox UI from outside.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="index.html">← Back to Overview</a>
+  </footer>
+</div>
+
+<script src="../../theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software — Homelab — IT Hub</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Software Stack</h1>
+    <p class="lead">Proxmox VE as the hypervisor — VMs for the heavy lifting (Minecraft), LXC containers for the lightweight services (Plex, Nextcloud, Portainer). Everything behind a reverse proxy with a Cloudflare tunnel to simonsstudios.de.</p>
+  </header>
+
+  <!-- ===== ARCHITEKTUR ===== -->
+  <section class="section">
+    <h2><span class="num">00</span>Architecture — what runs where</h2>
+
+    <div class="prose">
+      <pre><code>Bare-Metal: Proxmox VE 8.x  (Ubuntu/Debian basiert, KVM + LXC)
+│
+├── VM 100  Minecraft Server #1     (Ubuntu 24.04 + Java 21 + Paper)
+│           4 vCores · 16 GB RAM · 30 GB virtio-disk
+│
+├── VM 101  Minecraft Server #2     (same config)
+│           4 vCores · 16 GB RAM · 30 GB virtio-disk
+│
+├── VM 110  AI Server (Medium/Pro)  (Ubuntu 24.04 + GPU-Passthrough)
+│           8 vCores · 16 GB RAM · 50 GB virtio-disk
+│           PCI-Device: Tesla P40 oder RTX 3090
+│           Services: Ollama + Open WebUI + ggf. ComfyUI
+│           ── Setup-Details: ai.html
+│
+├── LXC 200 Plex Media Server       (Ubuntu 24.04 base)
+│           2 vCores · 4 GB RAM · 8 GB rootfs · /mnt/media bind-mount
+│
+├── LXC 201 Nextcloud (AIO)         (Docker-in-LXC oder native)
+│           2 vCores · 4 GB RAM · 16 GB rootfs · /mnt/cloud bind-mount
+│
+├── LXC 202 Portainer + Docker      (Stack-Manager für kleine Services)
+│           2 vCores · 2 GB RAM · 16 GB rootfs
+│
+├── LXC 203 Nginx Proxy Manager     (Reverse-Proxy, Wildcard-Cert via Cloudflare DNS)
+│           1 vCore · 512 MB RAM · 4 GB rootfs
+│
+└── LXC 204 cloudflared             (Cloudflare Tunnel zu *.simonsstudios.de)
+            1 vCore · 256 MB RAM · 2 GB rootfs
+            Note: Phase 1 — cloudflared runs here on the OptiPlex 7020 SFF (main
+            Proxmox host). When the PowerEdge arrives in Phase 2, this LXC moves
+            to the OptiPlex which becomes the dedicated edge box (always-on,
+            Cloudflare tunnel, Wake-on-LAN trigger) — see networking.html
+
+Storage-Pool:
+- local-zfs    NVMe 512 GB    Proxmox + VM/LXC roots + Plex-Cache
+- bulk-zfs     HDD 2 TB       /mnt/media (Plex-Library) + /mnt/cloud (Nextcloud-Files) + Backups</code></pre>
+
+      <p style="margin-top: 14px"><strong>Why VMs for MC, LXC for the rest?</strong> MC needs its own JVM instance with dedicated RAM, isolated crashes (one VM dies → the others stay up). Plex/Nextcloud gain little from VM isolation but benefit a lot from LXC efficiency (no kernel overhead, near-native speed, bind-mounts possible).</p>
+    </div>
+  </section>
+
+  <!-- ===== PROXMOX ===== -->
+  <section class="section">
+    <h2><span class="num">01</span>Proxmox VE — Installation</h2>
+
+    <ol class="steps">
+      <li><strong>Get the ISO:</strong> <code>proxmox.com/de/downloads</code> → "Proxmox VE 8.x ISO Installer". Write to USB with Rufus or Ventoy.</li>
+      <li><strong>Enable in BIOS:</strong> SVM/AMD-V (CPU virtualization), IOMMU (for GPU passthrough later), Wake-on-LAN, S3 suspend.</li>
+      <li><strong>Boot</strong> from USB → graphical installer. Key points: filesystem <strong>ZFS (RAID0 single-disk)</strong> on NVMe — gives you snapshot support. Hostname: <code>homelab</code>. Static IP: matching your LAN (e.g. <code>192.168.178.50</code>).</li>
+      <li><strong>First login:</strong> <code>https://&lt;ip&gt;:8006</code> — user <code>root</code>, password as set during install.</li>
+      <li><strong>No-Subscription repo</strong> activation (otherwise the update dialog nags you). Datacenter → Subscription → Remove; in <code>/etc/apt/sources.list.d/</code> remove the enterprise source, add the no-sub repo.</li>
+      <li><strong>Mount the HDD:</strong> Datacenter → Storage → create ZFS pool <code>bulk-zfs</code> from the 2 TB HDD, or mount directly as a directory under <code>/mnt/bulk</code>.</li>
+      <li><strong>Plan VMID ranges:</strong> 100–199 for VMs, 200–299 for LXC. Keep it consistent.</li>
+    </ol>
+
+    <div class="callout info">
+      <span class="icon">💡</span>
+      <div class="body"><strong>ZFS on a single NVMe:</strong> overkill for data integrity (no redundancy), but gives you ZFS snapshots — you can take a pre-update snapshot and roll back in 2 seconds. Worth it for that alone.</div>
+    </div>
+  </section>
+
+  <!-- ===== MC ===== -->
+  <section class="section">
+    <h2><span class="num">02</span>Minecraft Server (Paper, Java 21, Aikar's Flags)</h2>
+
+    <div class="prose">
+      <p>One dedicated Ubuntu VM per MC server. 4 vCores is enough — MC is single-thread heavy, more cores don't help much. 16 GB RAM allocated, ~14 GB of that for the JVM heap. Java 21 is required for 1.20.5+.</p>
+
+      <h3>VM Setup (Proxmox)</h3>
+      <ol class="steps">
+        <li>Create VM: ID <code>100</code>, OS Ubuntu 24.04 Server, 4 vCores (host CPU type), 16 GB RAM, 30 GB virtio-SCSI on <code>local-zfs</code>, 1× virtio-net bridge on <code>vmbr0</code>.</li>
+        <li>Install Ubuntu, set static IP, enable SSH, install <code>openjdk-21-jre-headless</code> + <code>screen</code> or <code>tmux</code>.</li>
+        <li>Get the Paper JAR: <code>papermc.io/downloads/paper</code> → latest 1.21.x. wget directly to <code>/opt/mc/paper.jar</code>.</li>
+        <li>First run accepts the EULA: <code>echo "eula=true" &gt; eula.txt</code></li>
+        <li>Start script with Aikar's Flags (see below). Set up as a systemd service or run via <code>tmux</code>.</li>
+      </ol>
+
+      <h3>Aikar's Flags (for 14 GB heap, MC server)</h3>
+      <pre><code>#!/bin/bash
+java -Xms14G -Xmx14G \
+  -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 \
+  -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC \
+  -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 \
+  -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 \
+  -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 \
+  -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 \
+  -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 \
+  -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true \
+  -jar paper.jar nogui</code></pre>
+
+      <p><strong>Important:</strong> <code>Xms == Xmx</code> (same value). G1GC with the region sizes from Aikar's recommendations. With 16 GB VM RAM: heap at 14 GB → 2 GB left for Linux + JVM overhead.</p>
+
+      <h3>Paper tuning via <code>spigot.yml</code> / <code>paper-global.yml</code></h3>
+      <ul>
+        <li><code>view-distance: 8</code> (default 10 → reducing to 8 saves enormous RAM/CPU)</li>
+        <li><code>simulation-distance: 6</code> (mob tick range)</li>
+        <li><code>no-tick-view-distance: 12</code> (players see further, but chunks don't tick)</li>
+        <li><code>entity-activation-range</code>: animals 24, monsters 32, misc 16 — works for moderate load</li>
+      </ul>
+
+      <h3>Monitoring</h3>
+      <p>Install <a href="https://github.com/lucko/spark">Spark</a> as a plugin — gives you TPS tracking, CPU profiling, heap analysis directly in-game. TPS &lt; 19 means something is wrong.</p>
+    </div>
+  </section>
+
+  <!-- ===== PLEX ===== -->
+  <section class="section">
+    <h2><span class="num">03</span>Plex Media Server</h2>
+
+    <div class="comp">
+      <h3>Setup as LXC Container <span class="price-tag">2 vCores · 4 GB RAM</span></h3>
+      <p class="why">Running Plex officially in an LXC is efficient — near-native I/O, low RAM footprint. Ubuntu 24.04 LXC, then <code>plexmediaserver</code> from the official Plex repo.</p>
+
+      <p><strong>Bind-mount for media:</strong> the Plex LXC sees <code>/mnt/media</code> from the host bulk pool. In <code>/etc/pve/lxc/200.conf</code>:</p>
+      <pre><code>mp0: /mnt/bulk/media,mp=/mnt/media</code></pre>
+
+      <p><strong>Hardware transcoding:</strong> the Ryzen 7 5700X has <strong>no iGPU</strong> — transcoding runs in software. That's fine for 1–2 parallel 1080p streams (the CPU handles it easily), but 4K transcoding will be slow. Fix if needed: add a cheap Intel ARC A310 (~€120) as a transcoding card, pass it through via <code>vfio</code> to the LXC. For now: skip.</p>
+
+      <p><strong>Plex Pass:</strong> if you pay for a Plex Pass (~€5/month or Lifetime ~€120), you get hardware transcoding support, mobile sync, intro skip, and Live TV. Without it everything still works, just no HW transcode.</p>
+    </div>
+  </section>
+
+  <!-- ===== NEXTCLOUD ===== -->
+  <section class="section">
+    <h2><span class="num">04</span>Nextcloud</h2>
+
+    <div class="comp">
+      <h3>Option A: Nextcloud AIO (Docker-in-LXC) <span class="price-tag">recommended</span></h3>
+      <p class="why">Nextcloud AIO (All-in-One) is the official Docker setup with a master container that manages everything (Apache, database, Redis, Talk, Office). LXC with Docker inside, then AIO via <code>docker run</code>. Advantage: one-click updates via the AIO UI, all components stay consistent.</p>
+      <p><strong>Storage:</strong> bind-mount <code>/mnt/bulk/cloud</code> as the Nextcloud data path. Files live on the HDD, not on the NVMe.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Option B: Native Nextcloud in LXC <span class="price-tag">more control</span></h3>
+      <p class="why">Install Apache/PHP-FPM/MariaDB directly in the LXC. More tuning options, less magic. More maintenance overhead. Only choose this if you enjoy Linux sysadmin work.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="icon">🔐</span>
+      <div class="body"><strong>HTTPS:</strong> Nextcloud complains loudly without TLS. Solution: Nginx Proxy Manager (LXC 203) with a wildcard cert via Cloudflare DNS challenge → <code>cloud.simonsstudios.de</code> gets a valid Let's Encrypt cert, internally it stays HTTP between NPM and Nextcloud.</div>
+    </div>
+  </section>
+
+  <!-- ===== PORTAINER ===== -->
+  <section class="section">
+    <h2><span class="num">05</span>Portainer + Docker</h2>
+
+    <div class="comp">
+      <h3>Setup in LXC with Docker <span class="price-tag">2 vCores · 2 GB RAM</span></h3>
+      <p class="why">Ubuntu LXC, install Docker (official convenience script), launch Portainer CE as the first container. Portainer is a web UI for everything Docker-based — container management, stack deployment via Compose, logs, stats.</p>
+
+      <pre><code># Start Portainer CE
+docker volume create portainer_data
+docker run -d -p 9443:9443 --name portainer --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest</code></pre>
+
+      <p><strong>What runs via Portainer:</strong> smaller services that don't justify their own LXC — e.g. <code>uptime-kuma</code> (uptime monitoring), <code>vaultwarden</code> (Bitwarden self-host), <code>homepage</code> (dashboard), <code>changedetection.io</code> (web page monitoring).</p>
+    </div>
+  </section>
+
+  <!-- ===== REVERSE PROXY ===== -->
+  <section class="section">
+    <h2><span class="num">06</span>Reverse Proxy (Nginx Proxy Manager)</h2>
+
+    <div class="comp">
+      <h3>NPM in LXC <span class="price-tag">1 vCore · 512 MB RAM</span></h3>
+      <p class="why">Nginx Proxy Manager is Nginx + a UI for SSL certificates. You click together subdomains (<code>cloud.simonsstudios.de</code> → <code>192.168.178.51:11000</code>), NPM fetches a Let's Encrypt cert via Cloudflare DNS challenge (wildcard supported) and proxies the traffic.</p>
+
+      <p><strong>Setup:</strong></p>
+      <ol class="steps">
+        <li>LXC with Docker, deploy NPM container</li>
+        <li>Create Cloudflare API token (DNS edit permissions only for simonsstudios.de)</li>
+        <li>In NPM SSL → Add Wildcard Cert → Cloudflare DNS challenge → <code>*.simonsstudios.de</code></li>
+        <li>One proxy host per service: subdomain → backend IP:port → select cert</li>
+      </ol>
+
+      <p class="alt"><strong>Alternatives:</strong> Caddy with the <code>caddy-cloudflare</code> plugin — config-as-code, less clicking, more sysadmin-oriented. Traefik if you want Docker-native (auto-discovery via labels).</p>
+    </div>
+  </section>
+
+  <!-- ===== BACKUPS ===== -->
+  <section class="section">
+    <h2><span class="num">07</span>Backups</h2>
+
+    <div class="comp">
+      <h3>Proxmox Backup Server (PBS) as a secondary device <span class="price-tag">~€100 used (e.g. an old NUC)</span></h3>
+      <p class="why">Proxmox's own backup solution. PBS deduplicates at block level → backups for 2× MC + LXCs often only take 5–10 GB per full backup. Schedules via the Datacenter UI. If your main server dies, you have intact backups on the PBS.</p>
+      <p class="alt"><strong>Minimal option:</strong> Proxmox's own <code>vzdump</code> to the HDD in the same server — protects against software crashes, NOT hardware failure. Better than nothing.</p>
+      <p class="alt"><strong>Off-site:</strong> Important data (Nextcloud user files) additionally synced to Hetzner Storage Box (~€4/month for 1 TB) via <code>rclone</code> + cron.</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="icon">⚠</span>
+      <div class="body"><strong>3-2-1 rule:</strong> 3 copies of data, on 2 different media, 1 off-site. A local backup on the same HDD is ONLY protection against software crashes. A second server / NAS / cloud storage is required for real safety.</div>
+    </div>
+  </section>
+
+  <!-- ===== LOCAL AI ===== -->
+  <section class="section">
+    <h2><span class="num">08</span>Local AI (Medium/Pro Tier)</h2>
+
+    <div class="comp">
+      <h3>Ollama VM with GPU passthrough</h3>
+      <p class="why">In Medium and Pro tiers you have a GPU in the server. It gets passed directly into an Ubuntu VM via <strong>PCIe passthrough</strong>. There you run <strong>Ollama</strong> as the LLM engine (auto GPU detection) and <strong>Open WebUI</strong> as a ChatGPT-style frontend. Accessible via <code>ai.simonsstudios.de</code> through NPM.</p>
+      <p>What it can do: Llama 3 70B Q4 on 24 GB VRAM, Phi-4 14B (sweet spot, near ChatGPT quality), Stable Diffusion XL, Whisper for subtitles, local coding assistant via Continue.dev in VS Code.</p>
+      <p><strong>Full setup details, GPU comparison, performance numbers, model selection:</strong> on the dedicated <a href="ai.html">Local AI page</a>.</p>
+    </div>
+  </section>
+
+  <!-- ===== MONITORING ===== -->
+  <section class="section">
+    <h2><span class="num">09</span>Monitoring</h2>
+
+    <div class="prose">
+      <p>Three options, depending on how deep you want to go:</p>
+      <ul>
+        <li><strong>Netdata</strong> (LXC, single container) — installs everywhere instantly, nice UI, covers 95% of "what's going on with my server?". Recommended starting point.</li>
+        <li><strong>Uptime Kuma</strong> (Docker via Portainer) — service uptime, HTTP checks, ping. "Are my MC servers reachable?".</li>
+        <li><strong>Grafana + Prometheus + node_exporter</strong> — full stack, professional, significant setup effort. If you really want deep metrics (per-VM CPU, disk IOPS, network).</li>
+      </ul>
+
+      <p><strong>Current recommendation:</strong> Netdata + Uptime Kuma covers 99% of all needs. Grafana/Prometheus later if you feel like playing with visualization.</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="index.html">← Back to Overview</a>
+  </footer>
+</div>
+
+<script src="../../theme.js"></script>
+</body>
+</html>

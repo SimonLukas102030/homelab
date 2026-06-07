@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build — Homelab — IT Hub</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Hardware Build — three tiers</h1>
+    <p class="lead">Three complete builds, all in a 19" rack: server, switch (Phase 1: TP-Link TL-SG2210P, 8-port PoE, rack-native 1U — Cisco SF 300-48p goes to the barn for PoE cameras), rack frame, switched PDU, edge box. Medium and Pro include a GPU for local AI. Realistic used prices from eBay / Kleinanzeigen / ServerShop24, as of April 2026.</p>
+  </header>
+
+  <!-- ===== TIER 1 ===== -->
+  <section class="section" id="einsteiger">
+    <h2 style="color:#10b981"><span class="num" style="color:#10b981">TIER 1</span>Entry — under €1,000, no GPU</h2>
+
+    <p style="color:var(--text-muted); margin-bottom: 14px;">Dell PowerEdge R720 (2014, DDR3 platform). Sufficient for 2× MC servers, Plex, Nextcloud, Portainer, and a stack of small services. Local AI can be added later as an upgrade.</p>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Server: Dell PowerEdge R720 (2U) <span class="price-tag" style="color:#10b981">~€220 used</span></h3>
+      <p class="why">With 2× Xeon E5-2680v2 (10 C / 20 T per CPU = 20 C / 40 T total) and 64 GB DDR3-1866 ECC, base configs start at ~€180–250 on eBay/Kleinanzeigen. Get the model with 8× 2.5" bays (LFF variant has 8× 3.5") and H710 RAID controller in IT mode (for Proxmox ZFS).</p>
+      <dl class="kv">
+        <dt>CPU</dt><dd>2× Xeon E5-2680v2 (boost 3.6 GHz, 10 C / 20 T)</dd>
+        <dt>RAM (included)</dt><dd>typically 32–64 GB DDR3 ECC</dd>
+        <dt>RAM (max)</dt><dd>768 GB DDR3 ECC RDIMM (24 slots)</dd>
+        <dt>NIC</dt><dd>4× 1 GbE (Broadcom 5720) — Wake-on-LAN yes</dd>
+        <dt>iDRAC</dt><dd>iDRAC 7 Express (no KVM-over-IP — that requires Enterprise license)</dd>
+        <dt>PSU</dt><dd>2× 750 W redundant Platinum</dd>
+      </dl>
+      <p class="alt"><strong>What to watch for:</strong> RAM slots are in 3 banks per CPU — for DDR3-1866 speed use 8 DIMMs (4 per CPU), not 12. The PERC H710 must be flashed to "HBA mode" / IT mode for ZFS — otherwise ZFS tools don't see the disks directly.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>RAM: 64 GB DDR3 ECC (default) — upgrade to 128 GB optional <span class="price-tag" style="color:#10b981">~€100 / +€100</span></h3>
+      <p class="why">64 GB default = 4× 16 GB DDR3-1866 RDIMM ECC ~€100 used (~€20–30 per module). Enough for 2× MC + Plex + Nextcloud + stack with headroom. Upgrade to 128 GB (4× additional 16 GB DIMMs) later ~+€100. Search: <code>"DDR3 16GB 1866 ECC RDIMM"</code> or <code>"PC3-14900R"</code>. Brands: Samsung, Hynix, Micron — all equally good, avoid no-name.</p>
+      <p class="alt"><strong>Pro tip:</strong> An R720 with RAM <em>already installed</em> (e.g. R720 + 128 GB DDR3 as a bundle for €350–450) is often cheaper than a bare R720 (€220) + 128 GB RAM separately (€200) = €420. Filter Kleinanzeigen specifically for "R720 128GB".</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Storage: 1 TB NVMe + 2× 4 TB SAS HDD <span class="price-tag" style="color:#10b981">~€170</span></h3>
+      <p class="why"><strong>NVMe (Lexar NM790 1 TB, ~€80)</strong> via PCIe adapter (~€10) — the R720 has no M.2 slot, but plenty of PCIe slots. For Proxmox host + VM roots + Plex cache. <strong>2× 4 TB SAS HDD used</strong> (~€80 combined) → ZFS mirror on the drive bays for Plex/Nextcloud/backups. SAS over SATA: in the server world, cheaper used with the same performance.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Rack: 9U open-frame StarTech / Triton <span class="price-tag" style="color:#10b981">~€140</span></h3>
+      <p class="why">9U is enough: 2U server + 1U switch + 1U patch panel + 1U PDU + 1U cable manager + 3U reserve. Open-frame over enclosed → better airflow, ~€100 cheaper. Depth 600 mm, the R720 is 67 cm deep — tight but fits.</p>
+      <p class="alt"><strong>Alternative:</strong> Triton 6U wall-mount (~€90) if you want to save floor space — but then an R720 (2U) + switch (1U) + reserve barely fits. Not expandable.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Switched PDU: APC AP7900B used <span class="price-tag" style="color:#10b981">~€100 used</span></h3>
+      <p class="why">8 outlets individually switchable via web UI / SNMP / SSH. Exactly what you wanted ("turn individual devices on/off"). Used on eBay ~€80–150, new ~€280. Check <strong>battery &amp; firmware version</strong> on used units. PDU self-consumption: ~3 W.</p>
+      <p class="alt"><strong>Cheap alternative (no rack mount):</strong> Brennenstuhl Premium-Line 8-way with individual switches (~€40) — manual switching, no remote. <strong>Smart alternative:</strong> 8× TP-Link Tapo P100 smart plugs (~€60) — app-switchable, not rack format but very flexible.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Edge box: existing Dell Optiplex DDR3 <span class="price-tag" style="color:#10b981">€0</span></h3>
+      <p class="why">Your existing Optiplex (16 GB DDR3) is too weak as a main server — but perfect as an <strong>edge server</strong>: always-on, ~15 W idle, hosts the Cloudflare tunnel + WoL trigger to wake the main server. Puts a machine to use that you would otherwise have thrown away.</p>
+      <p class="alt"><strong>Alternative new:</strong> Raspberry Pi 4 8 GB (~€80) — only 3 W idle. But free Optiplex beats paying for a Pi.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Fan mod: 4× Noctua NF-A6x25 PWM + cable adapters <span class="price-tag" style="color:#10b981">~€80</span></h3>
+      <p class="why">The R720 has 6 stock 60 mm fans that idle at 8,000+ RPM. Bedroom torture. Mod: replace 60 mm slots with <strong>Noctua NF-A6x25 PWM</strong> (60 mm! ~€18/ea) — quiet (3000 RPM max) instead of a noise disaster. Plus <strong>4-pin to Dell adapter cables</strong> (~€15 from modders on eBay) — Dell uses a proprietary 5-pin connector.</p>
+      <p class="alt"><strong>Required add-on:</strong> IPMI fan override (free via <code>ipmitool</code>) — otherwise iDRAC spins the mod fans up anyway when it detects "non-Dell" fans. Details: <a href="operations.html#fan-mod">Operations</a>.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#10b981;">
+      <h3>Patch panel + Cat6 cables + cable manager <span class="price-tag" style="color:#10b981">~€60</span></h3>
+      <p class="why">24-port Cat6 keystone patch panel (1U, ~€30) + 8× Cat6 patch cables 0.5 m (~€15) + 1U horizontal cable manager (~€15). Keeps the rack tidy and clearly maps which port goes where.</p>
+    </div>
+
+    <div class="prose" style="margin-top:18px">
+      <h3>Entry Total</h3>
+      <table class="tbl">
+        <tbody>
+          <tr><td>Dell R720 (bare / minimal RAM)</td><td class="price" style="color:#10b981">€220</td></tr>
+          <tr><td>RAM 64 GB DDR3 ECC (4× 16 GB used)</td><td class="price" style="color:#10b981">€100</td></tr>
+          <tr><td>Storage (1 TB NVMe + 2× 4 TB SAS)</td><td class="price" style="color:#10b981">€170</td></tr>
+          <tr><td>9U open-frame rack</td><td class="price" style="color:#10b981">€140</td></tr>
+          <tr><td>Switched PDU APC AP7900B used</td><td class="price" style="color:#10b981">€100</td></tr>
+          <tr><td>Edge box (reuse Optiplex)</td><td class="price" style="color:#10b981">€0</td></tr>
+          <tr><td>Noctua fan mod + adapters</td><td class="price" style="color:#10b981">€80</td></tr>
+          <tr><td>Patch panel + Cat6 + manager</td><td class="price" style="color:#10b981">€60</td></tr>
+          <tr><td>TP-Link TL-SG2210P PoE switch (Phase 1)</td><td class="price" style="color:#10b981">€0</td></tr>
+          <tr class="total"><td>Total (64 GB)</td><td class="price" style="color:#10b981">~€870</td></tr>
+          <tr><td><em>+ Upgrade to 128 GB DDR3 later</em></td><td class="price" style="color:#10b981"><em>+€100</em></td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <span class="icon">⚠</span>
+        <div class="body"><strong>Power consumption:</strong> R720 idle ~80–100 W (DDR3 + older Xeons), under load 200–280 W. At €0.30/kWh ≈ €240/year for 24/7 idle. Noticeably more than a modern DDR4 build (R730: ~€140/year). Over 2 years the extra electricity cost exceeds the price difference between the R720 and R730.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MEDIUM ===== -->
+  <section class="section" id="medium">
+    <h2 style="color:#3b82f6"><span class="num" style="color:#3b82f6">TIER 2 ★</span>Medium — Best price/performance, with local AI</h2>
+
+    <p style="color:var(--text-muted); margin-bottom: 14px;">Dell PowerEdge R730 (DDR4) + Tesla P40 24 GB for local AI. More power-efficient than entry tier, GPU for LLMs &amp; Stable Diffusion, more RAM headroom for future projects.</p>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Server: Dell PowerEdge R730 (2U) <span class="price-tag" style="color:#3b82f6">~€380 used</span></h3>
+      <p class="why">2× Xeon E5-2680v3 (12 C / 24 T per CPU = 24 C / 48 T total) with 64 GB DDR4-2133 ECC. On eBay/Kleinanzeigen ~€350–500 used in reasonable config. Search for R730 with "8x 2.5" or "8x 3.5" bays + iDRAC 8 Express. Generational jump over R720: <strong>~30% lower idle wattage</strong>, DDR4 over DDR3, faster PCIe 3.0, GPU support out of the box.</p>
+      <dl class="kv">
+        <dt>CPU</dt><dd>2× Xeon E5-2680v3 (boost 3.3 GHz, 12 C / 24 T)</dd>
+        <dt>RAM (included)</dt><dd>typically 64 GB DDR4-2133 ECC</dd>
+        <dt>RAM (max)</dt><dd>768 GB DDR4 ECC (24 slots)</dd>
+        <dt>GPU support</dt><dd>2× double-wide GPU with GPU riser bracket (check Dell part numbers)</dd>
+        <dt>PCIe</dt><dd>7× PCIe 3.0 (3× x16, 4× x8) — enough for GPU + NVMe adapter</dd>
+        <dt>PSU</dt><dd>2× 750 W or 1100 W redundant Platinum (prefer 1100 W for GPU)</dd>
+      </dl>
+      <p class="alt"><strong>Important for GPU:</strong> you need the <strong>GPU-enabled version</strong> (with GPU riser bracket + 1100 W PSU). Ask the seller or request an interior photo — the riser is a large metal frame on the right side.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>RAM: 128 GB DDR4 ECC RDIMM <span class="price-tag" style="color:#3b82f6">~€400</span></h3>
+      <p class="why">4× 32 GB DDR4-2400 RDIMM ECC ~€80–120 per module. 128 GB kit = ~€340–460 used. Alternatively 8× 16 GB ~€280–360 (smaller modules often cheaper per GB, but all 8 slots occupied = harder to expand later). Search: <code>"DDR4 32GB 2400 ECC RDIMM"</code>, <code>"PC4-19200R"</code> or <code>"PC4-21300R"</code> (2666). Brands: Samsung M393A4K40, Hynix HMA84GR7, Micron MTA36ASF — all the same. <strong>On the R730 specifically use compatible RAM</strong> — check Dell RDIMM compatibility lists, some no-name modules simply won't boot.</p>
+      <p class="alt"><strong>Pro tip:</strong> R730 with 64 GB DDR4 already installed as a bundle (~€450–550) plus a 64 GB expansion (~€200) = €650–750, often cheaper than bare R730 + 128 GB separately.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Local AI GPU: Tesla P40 24 GB <span class="price-tag" style="color:#3b82f6">~€220 used</span></h3>
+      <p class="why">Server GPU with 24 GB GDDR5 — fits in the R730 via the GPU riser bracket. Pascal architecture (Compute 6.1) — works fine with Ollama / llama.cpp / vLLM. Performance: <strong>Llama 3 70B (Q4): ~6 t/s; Llama 3 8B: ~23 t/s.</strong> Sweet spot is 14B models in Q4 (Phi-4, Qwen 2.5 14B) — fit fully in 24 GB with context headroom.</p>
+      <p class="alt"><strong>Cooling mod required:</strong> P40 is passive (server form factor expects server airflow). You need a <strong>3D-printed shroud + 80 mm fan</strong> (standard mod, templates freely available on Thingiverse, ~€20 for fan + optional print). <strong>Power connector:</strong> Dell riser has 5 GND pins, P40 has 4 GND — wrong connector = short-circuit protection trips, server won't boot. Use an adapter cable with the correct pinout (~€15 on eBay "Dell P40 power adapter").</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Storage: 1 TB NVMe + 4 TB HDD <span class="price-tag" style="color:#3b82f6">~€130</span></h3>
+      <p class="why">Lexar NM790 1 TB (~€80) via PCIe adapter — faster than the entry-tier 512 GB variant (more Plex cache, more VM storage). 1× 4 TB HDD WD Red Plus (~€110) for /mnt/bulk — no mirror in Medium tier.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Rack: 12U open-frame <span class="price-tag" style="color:#3b82f6">~€200</span></h3>
+      <p class="why">12U over 9U: more headroom for future expansion (second server, NAS, switch upgrade). Depth 800 mm — gives room behind the R730 (67 cm) for cable management without strain. StarTech 4POSTRACK12U or equivalent.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Switched PDU APC AP7900B used <span class="price-tag" style="color:#3b82f6">~€140 used</span></h3>
+      <p class="why">Same model as entry tier, but a newer unit (fresher firmware, better battery). Each of the 8 outlets switchable via web/SSH — you can isolate the MC server VM from the Plex server circuit, or disable the GPU for power-saving when not in use.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Edge box: reuse Optiplex OR Pi 4 8 GB <span class="price-tag" style="color:#3b82f6">€0 or ~€80</span></h3>
+      <p class="why">Same as entry tier. Pi 4 8 GB is ~12 W less than the Optiplex — over a year ~€30 less in electricity. If you'd otherwise throw the Optiplex away, keep using it.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Fan mod: 6× Noctua NF-A6x25 PWM + adapters <span class="price-tag" style="color:#3b82f6">~€120</span></h3>
+      <p class="why">R730 has 6 fan slots. Plus the GPU cooling solution (see above). Total fan budget ~€120 (server) + ~€20 (GPU shroud) = €140.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#3b82f6;">
+      <h3>Patch panel + Cat6 + cable mgmt <span class="price-tag" style="color:#3b82f6">~€60</span></h3>
+      <p class="why">Same as entry tier. Scales without issues.</p>
+    </div>
+
+    <div class="prose" style="margin-top:18px">
+      <h3>Medium Total</h3>
+      <table class="tbl">
+        <tbody>
+          <tr><td>Dell R730 (bare, GPU-capable with 1100 W PSU)</td><td class="price" style="color:#3b82f6">€380</td></tr>
+          <tr><td>RAM 128 GB DDR4 ECC (4× 32 GB used)</td><td class="price" style="color:#3b82f6">€400</td></tr>
+          <tr><td>Tesla P40 24 GB used</td><td class="price" style="color:#3b82f6">€220</td></tr>
+          <tr><td>P40 power adapter + cooling shroud</td><td class="price" style="color:#3b82f6">€35</td></tr>
+          <tr><td>Storage (1 TB NVMe + 4 TB HDD)</td><td class="price" style="color:#3b82f6">€130</td></tr>
+          <tr><td>12U open-frame rack</td><td class="price" style="color:#3b82f6">€200</td></tr>
+          <tr><td>Switched PDU APC AP7900B used</td><td class="price" style="color:#3b82f6">€140</td></tr>
+          <tr><td>Edge box (Optiplex)</td><td class="price" style="color:#3b82f6">€0</td></tr>
+          <tr><td>Noctua fan mod (6×)</td><td class="price" style="color:#3b82f6">€120</td></tr>
+          <tr><td>Patch panel + Cat6 + manager</td><td class="price" style="color:#3b82f6">€60</td></tr>
+          <tr><td>TP-Link TL-SG2210P PoE switch (Phase 1)</td><td class="price" style="color:#3b82f6">€0</td></tr>
+          <tr class="total"><td>Total</td><td class="price" style="color:#3b82f6">~€1.685</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout ok">
+        <span class="icon">✓</span>
+        <div class="body"><strong>Why Medium is the sweet spot:</strong> DDR4 jump over entry tier (~30% lower idle wattage → cheaper long-term), 24 GB GPU VRAM for real AI workloads, and more RAM headroom. Extra cost ~€815 over entry — worth it over 5 years via lower electricity + GPU value.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRO ===== -->
+  <section class="section" id="pro">
+    <h2 style="color:#f59e0b"><span class="num" style="color:#f59e0b">TIER 3</span>Pro — Full build for demanding workloads</h2>
+
+    <p style="color:var(--text-muted); margin-bottom: 14px;">Dell PowerEdge R740 (newer, quieter, GPU-optimized) + RTX 3090 (24 GB, faster than P40, gaming-capable). 256 GB RAM, ZFS mirror on NVMe, UPS, enclosed 15U rack. For when you really want to go all in.</p>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Server: Dell PowerEdge R740 (2U) <span class="price-tag" style="color:#f59e0b">~€800 used</span></h3>
+      <p class="why">14th Gen — 2× Xeon Gold 6140 (18 C / 36 T per CPU = 36 C / 72 T total), 128 GB DDR4-2666 ECC. Used on eBay €700–950 in reasonable config. <strong>Big advantage for AI:</strong> R740 has dedicated GPU risers for 4× FH/FL GPUs or 2× double-wide. PCIe Gen3 ×16 without bifurcation tricks.</p>
+      <dl class="kv">
+        <dt>CPU</dt><dd>2× Xeon Gold 6140 (boost 3.7 GHz, 18 C / 36 T)</dd>
+        <dt>RAM (max)</dt><dd>1.5 TB DDR4 ECC (24 slots)</dd>
+        <dt>iDRAC</dt><dd>iDRAC 9 Enterprise (KVM-over-IP native — remote server admin without a monitor)</dd>
+        <dt>GPU slots</dt><dd>up to 3× double-wide or 4× single-wide GPU cards</dd>
+        <dt>PSU</dt><dd>2× 1100 W or 1600 W redundant (1600 W for 3+ GPUs)</dd>
+        <dt>Noise bonus</dt><dd>Stock fans are <strong>somewhat</strong> quieter than R720/R730 — newer PWM profiles</dd>
+      </dl>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>RAM: 256 GB DDR4-2666 ECC RDIMM <span class="price-tag" style="color:#f59e0b">~€780</span></h3>
+      <p class="why">8× 32 GB DDR4-2666 RDIMM ECC ~€90–130 per module. 256 GB kit ~€720–900 used. Largest single line item in the Pro build. <strong>Alternative:</strong> start with 128 GB (~€400) and expand later — saves €380 now.</p>
+      <p class="alt">256 GB only makes sense if you <strong>really</strong> host 4+ MC servers simultaneously, or multiple AI workloads in parallel (LLM inference + SDXL batch). For 95% of homelab use cases 128 GB is enough. <strong>Verdict:</strong> starting with 128 GB (Pro total drops to ~€3,305) is the pragmatic route.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Local AI GPU: RTX 3090 24 GB used <span class="price-tag" style="color:#f59e0b">~€650 used</span></h3>
+      <p class="why">RTX 3090 has the same 24 GB VRAM as P40, but: <strong>~3× faster</strong> in inference (GDDR6X over GDDR5, Ampere over Pascal), <strong>FP16-capable</strong> without tricks, <strong>lower power per FLOP</strong>, <strong>usable for gaming</strong>. 350 W TDP over 250 W — 1100 W PSU is mandatory. Used on eBay €600–750.</p>
+      <p class="alt"><strong>3090 over P40 advantages:</strong> SDXL generation in 5 s instead of 30 s, Llama 70B at Q5 instead of Q4 (better quality), audio/Whisper noticeably faster, Flux image gen works. <strong>Downside:</strong> ~€430 more expensive, louder (own fans, not passive). <strong>Alternative:</strong> 2× P40 = 48 GB total for ~€440 — handles 70B at Q8 (max quality).</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Storage: 2× 1 TB NVMe (mirror) + 2× 4 TB HDD (mirror) <span class="price-tag" style="color:#f59e0b">~€350</span></h3>
+      <p class="why">2× Samsung 990 Pro 1 TB as ZFS mirror = redundancy if one NVMe dies. 2× 4 TB WD Red Plus as ZFS mirror for /mnt/bulk = data survives a single HDD failure. Usable storage: 1 TB NVMe + 4 TB HDD.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Rack: 15U enclosed with glass door <span class="price-tag" style="color:#f59e0b">~€350</span></h3>
+      <p class="why">Lanview / Triton 15U closed with front glass + side panels. Looks like a professional datacenter component. Important: <strong>active ventilation required</strong> (top-mounted roof fan tray, ~€60 extra) — an enclosed rack without airflow will heat-soak.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Smart PDU with per-outlet metering: APC AP8941 <span class="price-tag" style="color:#f59e0b">~€220 used</span></h3>
+      <p class="why">Switchable AND metered per outlet (watts + current + voltage). You can see exactly how much the server vs. GPU vs. switch draws — perfect for power tuning. Plus: programmable power sequences (e.g. switch first, then server, then GPU).</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>UPS: APC Smart-UPS 1500VA used <span class="price-tag" style="color:#f59e0b">~€200 used</span></h3>
+      <p class="why">Online sine-wave UPS with 980 W output. Keeps server + switch alive ~30 min on power loss — time for a clean shutdown via NUT. <strong>Battery check mandatory</strong> on used purchase (battery &gt; 4 years = replace, ~€80 replacement). USB port for NUT integration with Proxmox.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Edge box: Raspberry Pi 5 8 GB <span class="price-tag" style="color:#f59e0b">~€100</span></h3>
+      <p class="why">Pi 5 over Optiplex: 3 W idle, modern, ARM-efficient. Hosts cloudflared + WoL trigger. Pi 5 has fast I/O, NVMe hat option (for logs/cache).</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Premium fan mod: Noctua NF-A6x25 G2 + GPU cooling <span class="price-tag" style="color:#f59e0b">~€140</span></h3>
+      <p class="why">Premium Noctua fans (G2 = 2024 generation). RTX 3090 has its own fans (triple-slot), no additional cooling needed — but case airflow must be adequate. Plus Noctua NT-H2 thermal paste refresh on the CPU heatsink.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>8-port Gigabit backbone switch: TP-Link TL-SG108E <span class="price-tag" style="color:#f59e0b">~€35</span></h3>
+      <p class="why">Since the Cisco SF 300-48p only delivers 100 Mbit on the 48 access ports: a small Gigabit switch in front for server + workstation + edge box. Managed (VLAN-capable) for clean segmentation.</p>
+    </div>
+
+    <div class="comp" style="border-left-color:#f59e0b;">
+      <h3>Patch panel 24-port + Cat6a cables + cable mgmt <span class="price-tag" style="color:#f59e0b">~€80</span></h3>
+      <p class="why">Cat6a over Cat6 (for 10G upgrade later), 24-port patch panel, more patch cables for the additional devices.</p>
+    </div>
+
+    <div class="prose" style="margin-top:18px">
+      <h3>Pro Total</h3>
+      <table class="tbl">
+        <tbody>
+          <tr><td>Dell R740 (bare, GPU risers, 1100/1600 W PSU)</td><td class="price" style="color:#f59e0b">€800</td></tr>
+          <tr><td>RAM 256 GB DDR4-2666 ECC (8× 32 GB used)</td><td class="price" style="color:#f59e0b">€780</td></tr>
+          <tr><td>RTX 3090 24 GB used</td><td class="price" style="color:#f59e0b">€650</td></tr>
+          <tr><td>Storage (2× NVMe mirror + 2× HDD mirror)</td><td class="price" style="color:#f59e0b">€350</td></tr>
+          <tr><td>15U closed rack with glass door</td><td class="price" style="color:#f59e0b">€350</td></tr>
+          <tr><td>Smart PDU APC AP8941 used</td><td class="price" style="color:#f59e0b">€220</td></tr>
+          <tr><td>UPS APC Smart-UPS 1500VA used</td><td class="price" style="color:#f59e0b">€200</td></tr>
+          <tr><td>Edge box Raspberry Pi 5 8 GB</td><td class="price" style="color:#f59e0b">€100</td></tr>
+          <tr><td>Noctua G2 mod + GPU cooling maintenance</td><td class="price" style="color:#f59e0b">€140</td></tr>
+          <tr><td>8-port Gigabit backbone switch</td><td class="price" style="color:#f59e0b">€35</td></tr>
+          <tr><td>Patch panel + Cat6a + manager</td><td class="price" style="color:#f59e0b">€80</td></tr>
+          <tr><td>Cisco SF 300-48p PoE (barn / PoE cameras)</td><td class="price" style="color:#f59e0b">€0</td></tr>
+          <tr class="total"><td>Total (256 GB)</td><td class="price" style="color:#f59e0b">~€3.705</td></tr>
+          <tr><td><em>With 128 GB instead of 256 GB</em></td><td class="price" style="color:#f59e0b"><em>~€3.305</em></td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <span class="icon">⚠</span>
+        <div class="body"><strong>Pro only makes sense if:</strong> you genuinely host 4+ MC servers simultaneously, or multiple AI workloads in parallel (LLM + SDXL + Whisper), or you use the server for gaming via Parsec/Sunshine (RTX 3090 plays games at max settings). Otherwise the extra cost over Medium is hard to justify — most "Pro" features (UPS, enclosed rack, per-outlet metering) are lifestyle, not a technical requirement.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON TABLE ===== -->
+  <section class="section">
+    <h2><span class="num">CMP</span>Direct Comparison</h2>
+
+    <div class="prose">
+      <table class="tbl">
+        <thead>
+          <tr><th></th><th>Entry</th><th>Medium ★</th><th>Pro</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Server</td><td>Dell R720</td><td>Dell R730</td><td>Dell R740</td></tr>
+          <tr><td>CPU cores (total)</td><td class="num">20 C / 40 T</td><td class="num">24 C / 48 T</td><td class="num">36 C / 72 T</td></tr>
+          <tr><td>RAM</td><td class="num">64 GB DDR3 (128 +€100)</td><td class="num">128 GB DDR4</td><td class="num">256 GB DDR4 (128 −€400)</td></tr>
+          <tr><td>NVMe</td><td>1 TB single</td><td>1 TB single</td><td>2× 1 TB mirror</td></tr>
+          <tr><td>HDD</td><td>2× 4 TB SAS</td><td>1× 4 TB</td><td>2× 4 TB mirror</td></tr>
+          <tr><td>GPU</td><td>—</td><td>Tesla P40 24 GB</td><td>RTX 3090 24 GB</td></tr>
+          <tr><td>Local AI speed</td><td>—</td><td>~6 t/s 70B-Q4</td><td>~18 t/s 70B-Q4</td></tr>
+          <tr><td>Rack</td><td>9U open</td><td>12U open</td><td>15U closed</td></tr>
+          <tr><td>PDU</td><td>Switched 8-way</td><td>Switched 8-way</td><td>Smart, metered</td></tr>
+          <tr><td>UPS</td><td>—</td><td>—</td><td>1500 VA</td></tr>
+          <tr><td>Edge box</td><td>Optiplex</td><td>Optiplex</td><td>Pi 5</td></tr>
+          <tr><td>Idle power</td><td class="num">~80 W</td><td class="num">~55 W</td><td class="num">~70 W (with GPU)</td></tr>
+          <tr><td>Electricity cost/year</td><td class="num">~€210</td><td class="num">~€145</td><td class="num">~€185</td></tr>
+          <tr class="total"><td>Total</td><td class="price" style="color:#10b981">~€870</td><td class="price" style="color:#3b82f6">~€1.685</td><td class="price" style="color:#f59e0b">~€3.705</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info">
+      <span class="icon">📊</span>
+      <div class="body"><strong>5-year TCO incl. electricity (€0.30/kWh):</strong> Entry ~€1,920 · Medium ~€2,410 · Pro ~€4,630. Over 5 years Medium is €490 more than Entry — with a GPU the entire time and 64 GB more RAM. <strong>Medium remains the sweet spot.</strong></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="index.html">← Back to Overview</a>
+  </footer>
+</div>
+
+<script src="../../theme.js"></script>
+</body>
+</html>

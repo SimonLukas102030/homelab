@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homelab Rack Setup — IT Hub</title>
+
+  <meta name="proj-title"       content="Homelab Rack Setup" />
+  <meta name="proj-color"       content="#3b82f6" />
+  <meta name="proj-color-rgb"   content="59,130,246" />
+  <meta name="proj-description" content="Open frame 19&quot; rack 36U, ≥100 cm deep — left of the desk. Phase 1: OptiPlex + XR18 + HDMI panel + DIY side panels. Phase 2: Dell PowerEdge after summer job. Phase 3: sit-stand desk + chair + printer (Minijob)." />
+  <meta name="proj-tag"         content="Homelab / Build" />
+
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html" class="active">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Homelab Rack Setup</h1>
+    <p class="lead">Open frame 19" rack 36U, ≥100 cm deep — left of the desk. All devices rack-native where possible. DIY side panels bolt to the posts: birch plywood on the left (wood aesthetic + pothos plant), black pegboard on the right (Command Wall with hooks, reels, tools). Phase 3 independent of Phase 1/2: sit-stand desk frame + office chair + printer (Minijob funded).</p>
+  </header>
+
+  <section class="stats-banner stagger">
+    <div class="stat">
+      <div class="lbl">Phase 1 — with XR18</div>
+      <div class="val">~820–900 €</div>
+      <div class="sub">without rack (parents) — includes PDU, HDMI panel, cable mgmt</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">Phase 2 — after job</div>
+      <div class="val">+920–1.140 €</div>
+      <div class="sub">Dell R720/R730 + Noctua mod + UPS + Denon AVR (waitlist)</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">Phase 3 — Minijob</div>
+      <div class="val">~870–940 €</div>
+      <div class="sub">sit-stand frame + mesh chair + monitor arm + Brother laser printer</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">Rack</div>
+      <div class="val">36U</div>
+      <div class="sub">open frame, ≥100 cm deep, left of desk</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">Rack Controller</div>
+      <div class="val">Pi 4</div>
+      <div class="sub">10.1" display on OptiPlex shelf — HA kiosk, mixer, audio</div>
+    </div>
+  </section>
+
+  <!-- ===== RACK LAYOUT ===== -->
+  <section class="section">
+    <h2><span class="num">RACK</span>Slot Plan — 36U (U1–U20 active, U21–U36 reserve)</h2>
+    <div class="diagram">
+<span class="hi">╔═══════════════════════════════════════════════════════╗</span>
+<span class="hi">║  Brother DCP-L2620DW (printer — on top of rack)      ║  ← flat top surface, 6.3 kg, accessible at ~145 cm</span>
+<span class="hi">╠═════╦═════════════════════════════════════════════════╣</span>
+<span class="hi">║  U1 ║</span> Horizontal Cable Management (top)              ║  ← brush-strip, top entry
+<span class="hi">║  U2 ║</span> Patch Panel 24-port (optional)                  ║  ← clean termination for Cat6 runs
+<span class="hi">║  U3 ║</span> DIY Custom Panel 1U                             ║  ← [USB-A][USB-A][USB-C] [HDMI IN] [1][2][3][4] HDMI select → Command Wall reels
+<span class="hi">║  U4 ║</span> TP-Link TL-SG2210P (1U rack-native, 8× PoE)    ║  ← rack ears included, all ports rear
+<span class="hi">║  U5 ║</span> Behringer XR18 (1U rack-native, WiFi)           ║  ← 18ch digital mixer, all 18 ports rear
+<span class="hi">║  U6 ║</span> Rack PDU 1U (8× Schuko)                         ║  ← powers all rack devices
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U7  ║</span>                                                  ║  ↑ Sony STR-DB790 (145 mm = 3U clearance + 1U shelf)
+<span class="hi">║ U8  ║</span> Sony STR-DB790 (on shelf at U10)                 ║  ← all I/O rear, no rack-ear conversion
+<span class="hi">║ U9  ║</span>                                                  ║  ↓ shelf bracket at U10
+<span class="hi">║ U10 ║</span> 1U Shelf (Sony)                                  ║
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U11 ║</span>                                                  ║  ↑ OptiPlex SFF on side (100 mm = ~2U clearance)
+<span class="hi">║ U12 ║</span> OptiPlex 7020 SFF + Pi 4 + 10.1" Display         ║  ← display overlaps blank ~13 cm face, ~40 cm total width
+<span class="hi">║ U13 ║</span> 1U Shelf (OptiPlex + Pi)                         ║  ← shelf bracket
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U14 ║</span>                                                  ║
+<span class="hi">║ U15 ║</span> ░░░░░░░░░ RESERVE ░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U16 ║</span>                                                  ║  Phase 2 ↓
+<span class="hi">║ U17 ║</span> Dell PowerEdge R720 (Phase 2, 2U)               ║  ← ~72 cm deep → needs ≥100 cm rack
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U18 ║</span>                                                  ║
+<span class="hi">║ U19 ║</span> APC Smart-UPS 750RM (Phase 2, 2U)               ║  ← holds R720 for ~5–8 min on battery
+<span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
+<span class="hi">║ U20 ║</span> Horizontal Cable Management (bottom)             ║  ← mains cable entry from PDU
+<span class="hi">╚═════╩═════════════════════════════════════════════════╝</span>
+    </div>
+    <div class="callout info">
+      <div class="icon">📐</div>
+      <div class="body"><strong>Placement:</strong> Rack stands left of the desk. Open 4-post frame, 36U height, width 60 cm (19" standard), depth ≥100 cm — PowerEdge R720 (~72 cm) + rear cable management requires it. DIY side panels bolt to the posts: 12mm birch plywood on the left, black pegboard on the right (facing desk). Options: Rackmatic Open2 WJ073 38U 600×1000mm ~€294 (Cablematic, in stock), VEVOR 36U (check vevor.de). Printer on TOP of rack — set flat on top rail crossbar, 360 × 360 × 270 mm, 6.3 kg, reachable at ~145 cm.</div>
+    </div>
+  </section>
+
+  <!-- ===== DIY PANEL ===== -->
+  <section class="section">
+    <h2><span class="num">PANEL</span>DIY Custom Panel — U3</h2>
+    <p style="color:var(--text-muted); margin-bottom:16px;">1U blank panel is the central interface between rack internals and the desk. Built by hand — the HDMI switch PCB is stripped from its housing, mounted inside the 1U panel, and its 4 selection buttons exposed through cutouts in the panel face.</p>
+
+    <div class="twocol">
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">Front face layout</h3>
+        <div class="diagram" style="font-size:12px; padding:14px 16px;">
+<span class="hi">┌─────────────────────────────────────────────────────────┐</span>
+<span class="hi">│ [USB-A] [USB-A] [USB-C] │ [HDMI ▶] │ [1] [2] [3] [4] │ ≈≈≈≈≈ │</span>
+<span class="hi">└─────────────────────────────────────────────────────────┘</span>
+        ← USB hub               ← HDMI IN       ← select    ← cable reels
+        </div>
+        <dl class="kv" style="margin-top:12px; font-size:13px;">
+          <dt>USB section</dt><dd>Internal USB hub → 2× USB-A + 1× USB-C on front. Charges and passes data to PC. Cable reels (Command Wall) connect here.</dd>
+          <dt>HDMI IN socket</dt><dd>Front-panel HDMI female (Input 1 of switch) — quick connect for laptop, console, camera.</dd>
+          <dt>Select buttons [1][2][3][4]</dt><dd>HDMI switch PCB mounted inside, 4 buttons drilled through panel face. LED per port shows active input.</dd>
+          <dt>Cable reels slot</dt><dd>Fasgear retractable USB-C reels pass through slots to Command Wall exterior.</dd>
+        </dl>
+      </div>
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">Internal wiring</h3>
+        <table class="tbl" style="font-size:12px;">
+          <thead><tr><th>HDMI Port</th><th>Connected to</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>Input 1</td><td>Front panel HDMI socket</td><td>quick connect</td></tr>
+            <tr><td>Input 2</td><td>OptiPlex HDMI out</td><td>rear pigtail 0.5m</td></tr>
+            <tr><td>Input 3</td><td>Raspberry Pi mini-HDMI</td><td>rear pigtail 0.5m</td></tr>
+            <tr><td>Input 4</td><td>Spare (console, capture card)</td><td>rear pigtail 0.5m</td></tr>
+            <tr><td><strong>Output</strong></td><td><strong>G9 HDMI port</strong></td><td>2.5m to desk</td></tr>
+          </tbody>
+        </table>
+        <div class="callout ok" style="margin-top:12px;">
+          <div class="icon">✓</div>
+          <div class="body">Gaming PC uses DisplayPort → G9 directly (primary display connection). HDMI switch feeds G9's only remaining HDMI port. Total display inputs: 1 DP (PC direct) + 4 HDMI (via switch). Full 4K60 Hz on HDMI 2.0.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PHASE 1 ===== -->
+  <section class="section">
+    <h2><span class="num">PHASE 1</span>Ready to buy — ~820–900 € with XR18</h2>
+    <p style="color:var(--text-muted); margin-bottom: 16px;">Server runs on the existing OptiPlex 7020 SFF. Rack paid for by parents (~250–300 € new open frame).</p>
+
+    <div class="comp">
+      <h3>Open Frame Server Rack 36U, ≥100 cm deep <span class="price-tag">~250–300 € (parents)</span></h3>
+      <div class="why">Open 4-post frame, no doors or panels. ≥100 cm depth for Dell R720 (~72 cm) + rear cable management. Options: Rackmatic Open2 WJ073 38U 600×1000mm ~€294 (Cablematic, confirmed in stock), VEVOR.de open frame 36U ~€150–200 (check vevor.de/open-frame-server-rack-c_10750 directly). DIY side panels bolt to posts separately (see item below).</div>
+      <div class="alt"><strong>Cablematic:</strong> <a href="https://cablematic.com/es/producto/armario-rack-abierto-de-4-postes-mobil-1000-mm-38u-600x1000-open2-mobiRack-WJ073/" target="_blank">Rackmatic WJ073 38U ~€294</a> &nbsp;|&nbsp; <strong>VEVOR:</strong> vevor.de → open frame server rack → filter 36U</div>
+    </div>
+
+    <div class="comp">
+      <h3>Rack Shelf 1U × 2 (VALUE, 400 mm) <span class="price-tag">2 × 22 € = 44 €</span></h3>
+      <div class="why"><strong>Shelf 2a — Sony STR-DB790:</strong> Sony placed on shelf, all cables to rear. No rack-ear conversion. 145 mm tall → 4U total allocated (shelf + 3U clearance). <strong>Shelf 2b — OptiPlex + Pi + Display:</strong> OptiPlex SFF on its side (100 mm high, 290 mm wide). Pi 4 behind it. 10.1" display overlaps the blank front face of OptiPlex (~130 mm gap, no ports/vents there) → total width ~40 cm in 44.4 cm usable rack width.</div>
+      <div class="alt"><strong>Link:</strong> <a href="https://www.reichelt.com/de/en/shop/product/19_shelf_1u_black-357869" target="_blank">reichelt.com — VALUE 19" Shelf 1U black ~22 €</a></div>
+    </div>
+
+    <div class="comp">
+      <h3>Behringer X Air XR18 <span class="price-tag">~300–380 € used · 375 € new</span></h3>
+      <div class="why">True 1U rack unit — no shelf needed, all 18 channels + outputs at rear. WiFi control via app (X Air Edit, iOS/Android/PC) — no need to touch the rack. Digital zone routing far more flexible than analog AUX sends. 18 channels cover all PCs + mics + instruments simultaneously. Stock status June 2026: out of stock at Thomann, back soon — set alert.</div>
+      <div class="alt">
+        <strong>Used:</strong> <a href="https://www.kleinanzeigen.de/s-behringer-x-air-xr18/k0" target="_blank">kleinanzeigen.de — Behringer XR18</a><br>
+        <strong>New (€375, delivery wait):</strong> <a href="https://www.thomann.de/de/behringer_x_air_xr18.htm" target="_blank">thomann.de — Behringer X Air XR18</a><br>
+        <strong>Fallback:</strong> XENYX X1204USB used ~€80–110 + 1U Shelf €22 = ~€100–130 total
+      </div>
+    </div>
+
+    <div class="comp">
+      <h3>TP-Link TL-SG2210P (rack switch) + TL-SG108 (LR) + EAP670 (WAP) <span class="price-tag">~98 + 15 + 80 €</span></h3>
+      <div class="why">TL-SG2210P: 8× PoE+ Gbit + 2× SFP, 1U rack-native (rack ears included), managed L2. Confirmed ~€98 on Geizhals June 2026. TL-SG108: unmanaged 8-port for living room. EAP670: WiFi 6 AX3000, PoE-powered from switch.</div>
+      <div class="alt"><strong>TL-SG2210P:</strong> <a href="https://geizhals.de/tp-link-tl-sg2210p-a1156121.html" target="_blank">Geizhals ~€98</a> &nbsp;|&nbsp; <strong>EAP670:</strong> Amazon ~€80</div>
+    </div>
+
+    <div class="comp">
+      <h3>DIY Custom Panel 1U (USB + HDMI + 4×1 switch) <span class="price-tag">~75–90 €</span></h3>
+      <div class="why">1U blank panel (Adam Hall 87221STL). USB hub inside → USB-A/C on front. HDMI 4×1 switch PCB inside → front socket + 3 rear pigtails as inputs, 1 output pigtail to G9. 4 selection buttons drilled through panel face. See DIY Panel section above for full wiring diagram.</div>
+      <div class="alt"><strong>Adam Hall blank:</strong> <a href="https://www.thomann.de/de/adam_hall_87221stl_urackblende_1_he.htm" target="_blank">thomann.de ~€4</a> &nbsp;|&nbsp; <strong>HDMI 4×1 switch:</strong> Amazon ~€25 &nbsp;|&nbsp; full parts breakdown on Shopping List page</div>
+    </div>
+
+    <div class="comp">
+      <h3>Rack PDU 1U (8× Schuko) <span class="price-tag">~40–55 €</span></h3>
+      <div class="why">1U rack-mount power strip at U6. Powers XR18, Sony, OptiPlex, switch, Pi, panel. Surge protection + circuit breaker. Mains cable runs along bottom of rack from U20 cable management.</div>
+      <div class="alt"><strong>Amazon:</strong> search "PDU 1U 19 Zoll 8 Schuko" ~€40–55 &nbsp;|&nbsp; <a href="https://www.reichelt.de/de/de/shop/search/?SEARCH=PDU+1U+19" target="_blank">Reichelt PDU 19" 1HE</a></div>
+    </div>
+
+    <div class="comp">
+      <h3>Cable management — rack (1U × 2) + desk (height-adj ready) <span class="price-tag">~80–90 €</span></h3>
+      <div class="why">1U horizontal cable management at U1 (top) and U20 (bottom). Under-desk cable tray + cable spine + velcro + grommets — all bought now, compatible with the sit-stand desk frame (Phase 3). The cable spine at the desk leg handles the ~60 cm height travel without cables hanging loose. <strong>Must be installed before the sit-stand frame arrives.</strong></div>
+      <div class="alt">Details and exact items on the <a href="einkaufsliste.html">Shopping List → item 8</a></div>
+    </div>
+
+    <div class="comp" style="border-left: 3px solid var(--accent); padding-left: 16px;">
+      <h3>DIY Side Panels — Plywood (left) + Pegboard (right) <span class="price-tag">~45–65 €</span></h3>
+      <div class="why">Both panels bolt to the open frame rack posts via M6 cage nuts — no welding, no drilling the rack. Left: 12mm birch plywood panel, natural wood grain, pothos plant on top (vines cascade down). Right: black powder-coated metal pegboard (Command Wall facing the desk) — retractable USB-C cable reels thread through to DIY Panel U3, hooks for remotes (G9, Sony, LED), controllers, tools.</div>
+      <div class="alt">
+        <strong>Birch plywood 12mm:</strong> OBI/Baumarkt, custom cut ~40×120 cm ~€15–20<br>
+        <strong>Black metal pegboard 40×120 cm:</strong> OBI/Baumarkt ~€10–15<br>
+        <strong>Pegboard hooks + accessories:</strong> Amazon/OBI ~€10–15<br>
+        <strong>M6 cage nuts + bolts:</strong> ~€5 (needed for rack build anyway)<br>
+        <strong>Fasgear USB-C reels (2-pack):</strong> <a href="https://www.amazon.de/Fasgear-Einziehbares-USB-C-Kabel/dp/B0DXDYZQSM" target="_blank">Amazon ~€18–22</a>
+      </div>
+    </div>
+
+    <div class="comp">
+      <h3>Audio cables + Broadlink RM4 mini × 2 <span class="price-tag">~72 €</span></h3>
+      <div class="why">3.5mm → 2× RCA (B650 → Sony bridge until XR18). XLR-M → RCA (XR18 → Sony once live). TOSLINK optical (TV → Sony LR). Broadlink RM4 mini for IR control of Sony amps via Home Assistant.</div>
+      <div class="alt"><strong>Cables:</strong> Amazon/Thomann ~€32 &nbsp;|&nbsp; <strong>Broadlink RM4 mini × 2:</strong> Amazon ~€40</div>
+    </div>
+  </section>
+
+  <!-- ===== PHASE 2 ===== -->
+  <section class="section">
+    <h2><span class="num">PHASE 2</span>Waitlist — after summer job, summer 2026</h2>
+    <div class="callout warn">
+      <div class="icon">⏳</div>
+      <div class="body"><strong>Timing:</strong> Summer job 2026 (2 weeks × 40 h), then ~10 h/week after school. Buy PowerEdge when budget is secured. Rack is already planned for ≥100 cm depth — PowerEdge fits without swapping the rack.</div>
+    </div>
+
+    <div class="comp">
+      <h3>Dell PowerEdge R720 v2 — 128 GB DDR3 <span class="price-tag">~330 €</span></h3>
+      <div class="why">2× Xeon E5 v2 10-Core, 128 GB DDR3 ECC, 8× SFF bays. Best budget Proxmox server for 4–6 VMs. Alt: R730 64 GB DDR4 ~€450–550 if budget allows.</div>
+      <div class="alt"><strong>eBay:</strong> <a href="https://www.ebay.de/itm/145556305762" target="_blank">ebay.de/itm/145556305762</a> &nbsp;|&nbsp; <a href="https://www.kleinanzeigen.de/s-pcs/dell-poweredge/k0c228" target="_blank">Kleinanzeigen — Dell PowerEdge</a></div>
+    </div>
+
+    <div class="comp">
+      <h3>6× Noctua NF-A6x25 PWM + APC Smart-UPS 750RM (used) <span class="price-tag">~181–221 €</span></h3>
+      <div class="why">Noctua mod: R720 has 6× 60×38mm hot-swap fans. NF-A6x25 (60×25mm) fits, pin remap required (Dell pinout ≠ standard PWM). Freeze iDRAC firmware before applying fan control IPMI raw. UPS: APC 750RM 2U — holds R720 (~200W) for ~5–8 min for clean VM shutdown. Buy used and replace battery (~€25).</div>
+      <div class="alt"><strong>Noctua:</strong> <a href="https://www.amazon.de/dp/B00VXTANZ4" target="_blank">Amazon NF-A6x25 PWM</a> &nbsp;|&nbsp; <strong>APC UPS:</strong> eBay "APC Smart-UPS 750RM" used</div>
+    </div>
+  </section>
+
+  <!-- ===== PHASE 3 ===== -->
+  <section class="section">
+    <h2><span class="num">PHASE 3</span>Minijob Upgrades — independent of Phase 1/2</h2>
+    <div class="callout info">
+      <div class="icon">💡</div>
+      <div class="body">Phase 3 is not sequentially dependent on Phase 1 or 2. Buy these as Minijob money accumulates. Suggested order: <strong>1. office chair</strong> (highest daily impact) → <strong>2. printer</strong> (useful immediately) → <strong>3. sit-stand desk frame</strong> → <strong>4. monitor arm</strong> (last, because the arm mounts to the desk — wait until the frame is stable). All desk items are designed for the 160 cm × 80 cm × 1.5 cm tabletop.</div>
+    </div>
+
+    <div class="comp">
+      <h3>A · Ergonomic Mesh Office Chair <span class="price-tag">~230–400 €</span></h3>
+      <div class="why">Full mesh back, 4D armrests, adjustable lumbar support, seat depth adjustment. Not a gaming chair — wrong ergonomics for desk work. Sitting thousands of hours demands proper spinal support. Options: Sihoo M57 (~€230–260 budget) · Hbada E3 Pro 2026 (~€300–350 mid) · Used Steelcase Leap V2 / HM Mirra 2 (~€400–600 — best ergonomics, search Kleinanzeigen office furniture liquidations).</div>
+      <div class="alt"><strong>Sihoo M57:</strong> <a href="https://de.sihoooffice.com/products/m57-ergonomischer-stuhl" target="_blank">sihoooffice.de</a> &nbsp;|&nbsp; <strong>Hbada E3 Pro:</strong> <a href="https://www.hbada.eu/products/e3-pro-ergonomic-office-chair" target="_blank">hbada.eu</a></div>
+    </div>
+
+    <div class="comp">
+      <h3>B · Brother DCP-L2620DW — Laser Printer/Scanner <span class="price-tag">~178–200 €</span></h3>
+      <div class="why">Monochrome laser, 32 ppm, ADF scanner, duplex, WiFi. Toner ~1,200–3,000 pages per cartridge — no expensive ink subscriptions, no drying out. Confirmed ~€178 on Geizhals June 2026. Placed on TOP of rack (flat top surface, 6.3 kg, accessible at ~145 cm — too tall for inside rack allocation).</div>
+      <div class="alt"><strong>Geizhals:</strong> <a href="https://geizhals.de/brother-dcp-l2620dw-dcpl2620dwre1-a3047102.html" target="_blank">from €178</a> &nbsp;|&nbsp; <strong>Amazon.de:</strong> Brother DCP-L2620DW</div>
+    </div>
+
+    <div class="comp">
+      <h3>C · Height-Adjustable Desk Frame (FlexiSpot E5) <span class="price-tag">~200–280 €</span></h3>
+      <div class="why">Mounts under the 160×80×1.5 cm tabletop. Height range 58–123 cm, dual motor (more stable than single motor at 160 cm span), 4 memory presets, 125 kg capacity. 1.5 cm tabletop is fine — all brackets clamp from underneath. Desk cable management (Phase 1 item 8) must be installed first — it's designed for the full height travel range. Budget option: FlexiSpot EG1 single motor ~€200.</div>
+      <div class="alt"><strong>FlexiSpot E5:</strong> <a href="https://geizhals.de/flexispot-e5-sitz-steh-schreibtischgestell-a2608969.html" target="_blank">Geizhals from €280</a> &nbsp;|&nbsp; <a href="https://www.flexispot.de/elektrisch-hohenverstellbares-tischgestell-e5.html" target="_blank">flexispot.de direct</a></div>
+    </div>
+
+    <div class="comp">
+      <h3>D · Ergotron HX HD-Pivot 45-647-224 (monitor arm) <span class="price-tag">~180 € used · ~280 € new</span></h3>
+      <div class="why">For Samsung Odyssey G9 49" (1000R curvature, ~16 kg). HD-Pivot variant is mandatory — standard HX cannot tilt far enough for the extreme curvature. Mounts to desk surface, moves with it when desk height changes. Best bought after the desk frame is installed and stable.</div>
+      <div class="alt"><strong>Used:</strong> <a href="https://www.kleinanzeigen.de/s-ergotron-hx/k0" target="_blank">kleinanzeigen.de → filter "HD" or "647"</a> &nbsp;|&nbsp; <strong>New:</strong> <a href="https://geizhals.de/ergotron-hx-monitor-arm-mit-hd-gelenk-schwarz-45-647-224-a2546146.html" target="_blank">Geizhals ~€280</a></div>
+    </div>
+  </section>
+
+  <!-- ===== AUDIO SUMMARY ===== -->
+  <section class="section">
+    <h2><span class="num">AUDIO</span>Setup Overview</h2>
+    <p style="color:var(--text-muted); margin-bottom:16px;">Full details on the <a href="audio.html">Audio &amp; Multi-Room</a> page. Quick summary:</p>
+
+    <div class="twocol">
+      <div>
+        <h3 style="margin-bottom:10px; font-size:16px; font-weight:700;">Now — Room Setup</h3>
+        <div class="kv">
+          <dt>Amp</dt><dd>Sony Discrete 6ch (in rack, on shelf)</dd>
+          <dt>Mixer</dt><dd>Behringer XR18 → Sony via XLR→RCA (all ports rear)</dd>
+          <dt>Speakers</dt><dd>2× large L/R + smaller distributed</dd>
+          <dt>Sources</dt><dd>3× PC + instruments, all simultaneously</dd>
+          <dt>Surround</dt><dd>Sony DSP upmixed stereo → 6ch</dd>
+          <dt>Control</dt><dd>XR18 WiFi app or Pi touch display</dd>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px; font-size:16px; font-weight:700;">Later — Multi-Room</h3>
+        <div class="kv">
+          <dt>Technology</dt><dd>Snapcast (local, open source)</dd>
+          <dt>Server</dt><dd>Dell PowerEdge (Phase 2)</dd>
+          <dt>Per room</dt><dd>Raspberry Pi Zero 2W + amp (~€40)</dd>
+          <dt>Rooms</dt><dd>Bedroom · Living Room · Bathroom</dd>
+          <dt>Control</dt><dd>Home Assistant — local, no cloud</dd>
+          <dt>Voice</dt><dd>Whisper (STT) + Piper (TTS) — local</dd>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="icon">🎵</div>
+      <div class="body"><strong>XR18 digital routing:</strong> Zone outputs fully configurable via app — Main Out → Sony bedroom surround, Bus 1 → living room amp, Bus 2 → bathroom. More flexible than analog AUX sends, no need to touch the rack. WiFi control from Android/iOS/PC (X Air Edit).</div>
+    </div>
+  </section>
+
+  <!-- ===== CONTROLLER ===== -->
+  <section class="section">
+    <h2><span class="num">CONTROLLER</span>Pi 4 Touch Display</h2>
+    <p style="color:var(--text-muted);margin-bottom:16px;">Pi 4 + 10.1" display sits on the OptiPlex shelf (overlap layout) — controls everything even when the PC is off.</p>
+
+    <div class="twocol">
+      <div>
+        <div class="comp">
+          <h3>Raspberry Pi 4 (2 GB) + 10.1" Touchscreen <span class="price-tag">~90–110 €</span></h3>
+          <div class="why">Pi 4 runs Home Assistant in kiosk mode. Display sits beside the OptiPlex on the 1U shelf — overlaps the blank front face of the OptiPlex by ~13 cm. No ports or fan intakes on that side → total width ~40 cm in 44.4 cm usable rack width. No separate 1U bracket needed.</div>
+          <dl class="kv" style="margin-top:8px;">
+            <dt>Pi 4 (2 GB)</dt><dd>~45 € (Reichelt / Amazon)</dd>
+            <dt>10.1" Touchscreen</dt><dd>~45–65 € (Amazon)</dd>
+            <dt>Mount</dt><dd>on OptiPlex shelf, beside OptiPlex</dd>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;">What the panel controls</h3>
+        <table class="tbl">
+          <thead><tr><th>Function</th><th>Protocol</th></tr></thead>
+          <tbody>
+            <tr><td>Mixer faders (XR18)</td><td>OSC over LAN / WiFi</td></tr>
+            <tr><td>Snapcast zone volume</td><td>HTTP API</td></tr>
+            <tr><td>Sony STR-DB790 power/vol</td><td>IR (Broadlink)</td></tr>
+            <tr><td>Denon AVR (Phase 2)</td><td>denonavr HTTP</td></tr>
+            <tr><td>Server status / VMs</td><td>HA Proxmox integration</td></tr>
+            <tr><td>Room music</td><td>Snapcast client direct</td></tr>
+          </tbody>
+        </table>
+        <div class="callout ok" style="margin-top:12px;">
+          <div class="icon">✓</div>
+          <div class="body">Runs 24/7 — PC can be off. Directly in sight left of the desk.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NAV CARDS ===== -->
+  <section class="section">
+    <h2><span class="num">DOCS</span>Detail Pages</h2>
+    <div class="nav-cards stagger">
+      <a class="nav-card" href="einkaufsliste.html">
+        <div class="num">01 · Buy</div>
+        <h4>Shopping List</h4>
+        <p>All parts with direct links, prices, and status. Phase 1 (XR18 recommended), Phase 2 waitlist, Phase 3 (Minijob), complete cable plan.</p>
+      </a>
+      <a class="nav-card" href="audio.html">
+        <div class="num">02 · Audio</div>
+        <h4>Audio &amp; Multi-Room</h4>
+        <p>Behringer XR18 setup, digital zone routing, Sony 6ch amp, Snapcast multi-room, Home Assistant voice control.</p>
+      </a>
+      <a class="nav-card" href="server.html">
+        <div class="num">03 · Server</div>
+        <h4>Server (Phase 2)</h4>
+        <p>Dell R720 vs R730, Noctua mod guide, IPMI fan control, iDRAC firmware lock.</p>
+      </a>
+      <a class="nav-card" href="networking.html">
+        <div class="num">04 · Networking</div>
+        <h4>Networking</h4>
+        <p>VLAN plan, TL-SG2210P PoE switch config, EAP670 WAP, Cloudflare Tunnel + Wake-on-LAN.</p>
+      </a>
+      <a class="nav-card" href="operations.html">
+        <div class="num">05 · Ops</div>
+        <h4>Cooling &amp; Power</h4>
+        <p>Noctua mod details, noise floor reality, power consumption, disaster recovery.</p>
+      </a>
+      <a class="nav-card" href="ai.html">
+        <div class="num">06 · AI</div>
+        <h4>Local AI</h4>
+        <p>GPU options (P40 / RTX), Ollama setup, model sizing, performance tables.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Homelab Rack Setup · June 2026 · Phase 1 ready to buy · Phase 2 waitlist · Phase 3 Minijob
+  </footer>
+
+</div>
+<script src="../../theme.js"></script>
+</body>
+</html>

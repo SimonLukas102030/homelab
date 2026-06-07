@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networking — Homelab</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>
+    :root { --accent: #3b82f6; --accent-rgb: 59,130,246; }
+
+    /* ── Network Diagram ── */
+    .net-diagram {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .net-diagram svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 900px;
+      width: 100%;
+      height: auto;
+    }
+
+    /* SVG elements use CSS vars via currentColor trick */
+    .nd-bg       { fill: var(--surface-2); }
+    .nd-border   { stroke: var(--border); stroke-width: 1.5; fill: none; }
+    .nd-text     { fill: var(--text); font-family: inherit; }
+    .nd-sub      { fill: var(--text-muted); font-family: inherit; }
+    .nd-accent   { fill: var(--accent); }
+    .nd-line     { stroke: var(--border); stroke-width: 1.5; fill: none; }
+    .nd-line-acc { stroke: var(--accent); stroke-width: 2; fill: none; }
+    .nd-line-dot { stroke: var(--text-dim); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+
+    .nd-zone-rack { fill: rgba(59,130,246,0.07); stroke: rgba(59,130,246,0.25); stroke-width: 1; rx: 12; }
+    .nd-zone-lr   { fill: rgba(52,211,153,0.07); stroke: rgba(52,211,153,0.25); stroke-width: 1; }
+    .nd-zone-wifi { fill: rgba(167,139,250,0.07); stroke: rgba(167,139,250,0.25); stroke-width: 1; stroke-dasharray: 6 3; }
+
+    .nd-label-rack { fill: rgba(59,130,246,0.7);  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-family: inherit; }
+    .nd-label-lr   { fill: rgba(52,211,153,0.7);  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-family: inherit; }
+    .nd-label-wifi { fill: rgba(167,139,250,0.7); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-family: inherit; }
+
+    /* device boxes */
+    .nd-box { rx: 8; ry: 8; }
+    .nd-box-router  { fill: var(--surface-2); stroke: #f59e0b; stroke-width: 1.5; }
+    .nd-box-switch  { fill: var(--surface-2); stroke: #3b82f6; stroke-width: 2; }
+    .nd-box-server  { fill: var(--surface-2); stroke: #3b82f6; stroke-width: 1.5; }
+    .nd-box-device  { fill: var(--surface-2); stroke: var(--border); stroke-width: 1.5; }
+    .nd-box-wap     { fill: var(--surface-2); stroke: #a78bfa; stroke-width: 1.5; }
+    .nd-box-lr-sw   { fill: var(--surface-2); stroke: #34d399; stroke-width: 1.5; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html" class="active">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Networking</h1>
+    <p class="lead">Two-zone network: rack (bedroom) + living room, connected via uplink. WAP for mobile devices. Cisco SF300 moves to the barn for PoE cameras.</p>
+  </header>
+
+  <!-- ===== FLOOR PLAN ===== -->
+  <section class="section">
+    <h2><span class="num">FLOOR PLAN</span>Room Overview — Network &amp; Audio</h2>
+    <div class="net-diagram">
+      <svg viewBox="0 0 860 680" xmlns="http://www.w3.org/2000/svg" aria-label="Floor plan with network layout">
+        <defs>
+          <marker id="fp-b" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+          <marker id="fp-g" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#34d399"/></marker>
+          <marker id="fp-p" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#a78bfa"/></marker>
+        </defs>
+
+        <!-- ══ ROOMS ══ -->
+        <rect x="12" y="12" width="836" height="656" rx="4" fill="none" stroke="var(--border)" stroke-width="3"/>
+        <!-- Router/Hallway top-left -->
+        <rect x="12" y="12" width="265" height="295" fill="rgba(99,102,241,0.04)" stroke="var(--border)" stroke-width="1.5"/>
+        <!-- Bathroom top-center -->
+        <rect x="277" y="12" width="195" height="175" fill="rgba(99,102,241,0.04)" stroke="var(--border)" stroke-width="1.5"/>
+        <!-- Storage top-right -->
+        <rect x="472" y="12" width="376" height="295" fill="rgba(99,102,241,0.03)" stroke="var(--border)" stroke-width="1.5"/>
+        <!-- Passageway center -->
+        <rect x="277" y="187" width="195" height="120" fill="rgba(99,102,241,0.03)" stroke="var(--border)" stroke-width="1.5"/>
+        <!-- Office/Bedroom bottom-left -->
+        <rect x="12" y="307" width="265" height="361" fill="rgba(59,130,246,0.05)" stroke="#3b82f6" stroke-width="2"/>
+        <!-- Living Room bottom-right -->
+        <rect x="277" y="307" width="571" height="361" fill="rgba(52,211,153,0.04)" stroke="var(--border)" stroke-width="1.5"/>
+
+        <!-- Door cuts -->
+        <rect x="275" y="390" width="4" height="45" fill="var(--bg)"/>
+        <rect x="470" y="305" width="45" height="4" fill="var(--bg)"/>
+
+        <!-- ══ ROOM LABELS ══ -->
+        <text x="26" y="32" font-size="10" font-weight="700" fill="gray" opacity="0.55">Router Room / Hallway</text>
+        <text x="291" y="30" font-size="12" font-weight="700" fill="gray" opacity="0.55">Bathroom</text>
+        <text x="486" y="30" font-size="12" font-weight="700" fill="gray" opacity="0.45">Storage</text>
+        <text x="291" y="204" font-size="10" font-weight="600" fill="gray" opacity="0.45">Passageway</text>
+        <text x="26" y="328" font-size="12" font-weight="800" fill="#3b82f6" opacity="0.75">Office / Bedroom</text>
+        <text x="480" y="328" font-size="14" font-weight="800" fill="gray" opacity="0.4">Living Room</text>
+
+        <!-- ══ DEVICES ══ -->
+
+        <!-- FritzBox -->
+        <rect x="32" y="48" width="120" height="46" rx="7" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="92" y="67" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">FritzBox</text>
+        <text x="92" y="84" text-anchor="middle" font-size="9" fill="gray">Router · WAN</text>
+
+        <!-- Stairs -->
+        <rect x="32" y="140" width="100" height="55" rx="5" fill="rgba(99,102,241,0.08)" stroke="rgba(99,102,241,0.25)" stroke-width="1" stroke-dasharray="5 3"/>
+        <text x="82" y="163" text-anchor="middle" font-size="10" fill="gray">Stairs</text>
+        <text x="82" y="179" text-anchor="middle" font-size="9" fill="gray">upstairs</text>
+
+        <!-- Rack (tall box, left side of bedroom) -->
+        <rect x="22" y="370" width="72" height="125" rx="6" fill="rgba(59,130,246,0.18)" stroke="#3b82f6" stroke-width="2"/>
+        <text x="58" y="420" text-anchor="middle" font-size="12" font-weight="800" fill="#3b82f6">RACK</text>
+        <text x="58" y="436" text-anchor="middle" font-size="9" fill="gray">36U</text>
+        <text x="58" y="450" text-anchor="middle" font-size="8" fill="gray">Switch · WAP</text>
+        <text x="58" y="464" text-anchor="middle" font-size="8" fill="gray">Server · Audio</text>
+        <text x="58" y="478" text-anchor="middle" font-size="8" fill="gray">Sony STR-DB790</text>
+
+        <!-- Desk -->
+        <rect x="105" y="375" width="155" height="58" rx="5" fill="rgba(59,130,246,0.07)" stroke="rgba(59,130,246,0.22)" stroke-width="1.5"/>
+        <text x="182" y="398" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Desk</text>
+        <text x="182" y="413" text-anchor="middle" font-size="9" fill="gray">Odyssey G9 49" · RTX 5080</text>
+        <text x="182" y="426" text-anchor="middle" font-size="8" fill="gray">ASUS B650 · 4 PCs</text>
+
+        <!-- WAP (wall-mount) -->
+        <circle cx="220" cy="540" r="24" fill="rgba(167,139,250,0.15)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="220" y="536" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">WAP</text>
+        <text x="220" y="550" text-anchor="middle" font-size="8" fill="gray">WiFi 6</text>
+        <!-- WiFi waves -->
+        <path d="M205,524 Q220,510 235,524" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.4"/>
+        <path d="M198,516 Q220,498 242,516" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.25"/>
+
+        <!-- TV -->
+        <rect x="372" y="320" width="165" height="44" rx="5" fill="rgba(52,211,153,0.1)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="454" y="339" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">📺 TV</text>
+        <text x="454" y="355" text-anchor="middle" font-size="9" fill="gray">Optical → Sony STR-DB790 LR</text>
+
+        <!-- Sony LR -->
+        <rect x="560" y="368" width="135" height="44" rx="5" fill="rgba(52,211,153,0.08)" stroke="rgba(52,211,153,0.3)" stroke-width="1.5"/>
+        <text x="627" y="386" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">Sony STR-DB790</text>
+        <text x="627" y="401" text-anchor="middle" font-size="8" fill="gray">Living Room Stereo</text>
+
+        <!-- LR Switch -->
+        <rect x="680" y="460" width="130" height="44" rx="6" fill="rgba(52,211,153,0.12)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="745" y="478" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">TL-SG108</text>
+        <text x="745" y="494" text-anchor="middle" font-size="9" fill="gray">LR Switch · 8× Gbit</text>
+
+        <!-- Apple Setup -->
+        <rect x="290" y="510" width="115" height="42" rx="5" fill="rgba(52,211,153,0.08)" stroke="rgba(52,211,153,0.25)" stroke-width="1.5"/>
+        <text x="347" y="528" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor"> Apple Setup</text>
+        <text x="347" y="542" text-anchor="middle" font-size="8" fill="gray">Mac · 1 Gbit</text>
+
+        <!-- Music setup -->
+        <rect x="680" y="548" width="130" height="48" rx="5" fill="rgba(52,211,153,0.08)" stroke="rgba(52,211,153,0.25)" stroke-width="1.5"/>
+        <text x="745" y="567" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">🎛 Music Setup</text>
+        <text x="745" y="581" text-anchor="middle" font-size="8" fill="gray">Mixer (mobile)</text>
+        <text x="745" y="591" text-anchor="middle" font-size="8" fill="gray">for church services</text>
+
+        <!-- Sofa -->
+        <rect x="380" y="608" width="205" height="44" rx="8" fill="none" stroke="rgba(99,102,241,0.12)" stroke-width="1" stroke-dasharray="5 3"/>
+        <text x="482" y="634" text-anchor="middle" font-size="11" fill="gray" opacity="0.4">Sofa</text>
+
+        <!-- ══ CABLE RUNS ══ -->
+
+        <!-- 1. FritzBox → Rack -->
+        <polyline points="92,94 92,305 58,305 58,368"
+                  stroke="#3b82f6" stroke-width="2.5" fill="none"
+                  marker-end="url(#fp-b)" stroke-linejoin="round"/>
+        <rect x="16" y="218" width="84" height="18" rx="3" fill="var(--surface)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="58" y="230" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="700">Cat6 ↓ Rack</text>
+
+        <!-- 2. Rack → LR Switch -->
+        <polyline points="94,455 252,455 252,620 745,620 745,504"
+                  stroke="#34d399" stroke-width="2" fill="none"
+                  marker-end="url(#fp-g)" stroke-linejoin="round"/>
+        <rect x="448" y="610" width="90" height="18" rx="3" fill="var(--surface)" stroke="rgba(52,211,153,0.3)" stroke-width="1"/>
+        <text x="493" y="623" text-anchor="middle" font-size="9" fill="#34d399" font-weight="700">Cat6 → LR</text>
+
+        <!-- 3. Rack → WAP (PoE) -->
+        <polyline points="58,495 58,540 196,540"
+                  stroke="#a78bfa" stroke-width="1.5" fill="none"
+                  marker-end="url(#fp-p)" stroke-linejoin="round" stroke-dasharray="5 3"/>
+        <rect x="62" y="530" width="38" height="16" rx="3" fill="var(--surface)"/>
+        <text x="81" y="541" text-anchor="middle" font-size="8" fill="#a78bfa" font-weight="700">PoE</text>
+
+        <!-- 4. LR Switch → TV -->
+        <polyline points="745,460 745,365 537,365"
+                  stroke="#34d399" stroke-width="1.5" fill="none"
+                  marker-end="url(#fp-g)" stroke-linejoin="round"/>
+
+        <!-- 5. LR Switch → Sony LR -->
+        <polyline points="680,482 695,482 695,390"
+                  stroke="#34d399" stroke-width="1.5" fill="none"
+                  marker-end="url(#fp-g)" stroke-linejoin="round"/>
+
+        <!-- 6. LR Switch → Apple -->
+        <polyline points="680,482 460,482 460,531 405,531"
+                  stroke="#34d399" stroke-width="1.5" fill="none"
+                  marker-end="url(#fp-g)" stroke-linejoin="round"/>
+
+        <!-- 7. LR Switch → Music setup -->
+        <polyline points="745,504 745,548"
+                  stroke="#34d399" stroke-width="1.5" fill="none"
+                  marker-end="url(#fp-g)"/>
+
+        <!-- ══ LEGEND ══ -->
+        <rect x="16" y="634" width="220" height="30" rx="5" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+        <line x1="24" y1="648" x2="46" y2="648" stroke="#3b82f6" stroke-width="2.5"/>
+        <text x="51" y="652" font-size="9" fill="currentColor">Rack Cable (1 Gbit)</text>
+        <line x1="130" y1="648" x2="152" y2="648" stroke="#34d399" stroke-width="2"/>
+        <text x="157" y="652" font-size="9" fill="currentColor">LR Network</text>
+
+        <rect x="16" y="650" width="220" height="18" rx="0" fill="var(--surface)" stroke="none"/>
+        <line x1="24" y1="660" x2="46" y2="660" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="51" y="664" font-size="9" fill="currentColor">PoE Cable</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== TOPOLOGY ===== -->
+  <section class="section">
+    <h2><span class="num">TOPOLOGY</span>Network Topology</h2>
+
+    <div class="net-diagram">
+      <svg viewBox="0 0 900 570" xmlns="http://www.w3.org/2000/svg" aria-label="Network Topology">
+
+        <defs>
+          <marker id="ah"   markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="rgba(100,116,139,0.7)"/></marker>
+          <marker id="ah-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3b82f6"/></marker>
+          <marker id="ah-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34d399"/></marker>
+          <marker id="ah-v" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#a78bfa"/></marker>
+        </defs>
+
+        <!-- ── ZONES ── -->
+        <rect x="8"   y="148" width="530" height="308" rx="12"
+              fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.22)" stroke-width="1.5"/>
+        <text x="22" y="167" font-size="9" font-weight="700" fill="#3b82f6" opacity="0.85" letter-spacing="1">RACK — BEDROOM</text>
+
+        <rect x="8"   y="462" width="530" height="90"  rx="12"
+              fill="rgba(167,139,250,0.05)" stroke="rgba(167,139,250,0.22)" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="22" y="480" font-size="9" font-weight="700" fill="#a78bfa" opacity="0.85" letter-spacing="1">WIFI</text>
+
+        <rect x="548" y="168" width="344" height="302" rx="12"
+              fill="rgba(52,211,153,0.05)" stroke="rgba(52,211,153,0.22)" stroke-width="1.5"/>
+        <text x="562" y="187" font-size="9" font-weight="700" fill="#34d399" opacity="0.85" letter-spacing="1">LIVING ROOM</text>
+
+        <!-- ══ INTERNET CLOUD ══ -->
+        <g transform="translate(390,6)">
+          <path d="M22,44 Q6,44 6,30 Q6,19 16,18 Q15,7 26,7 Q35,7 38,13 Q42,9 50,9 Q61,9 61,20 Q68,21 68,30 Q68,44 52,44 Z"
+                fill="rgba(99,102,241,0.12)" stroke="#6366f1" stroke-width="1.5"/>
+          <text x="37" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">Internet</text>
+          <text x="37" y="43" text-anchor="middle" font-size="9"  fill="gray">WAN</text>
+        </g>
+
+        <!-- ══ FRITZBOX — Cisco-style router ══ -->
+        <line x1="430" y1="52" x2="430" y2="82" stroke="#f59e0b" stroke-width="1.8" marker-end="url(#ah)"/>
+        <text x="442" y="70" font-size="9" fill="gray">WAN</text>
+
+        <g transform="translate(412,84)" fill="none" stroke="#f59e0b" stroke-width="1.8">
+          <circle cx="18" cy="18" r="16" fill="rgba(245,158,11,0.1)"/>
+          <line x1="2"  y1="18" x2="34" y2="18"/>
+          <path d="M27,12 L34,18 L27,24" stroke-linejoin="round"/>
+          <path d="M9,12  L2,18  L9,24"  stroke-linejoin="round"/>
+          <line x1="18" y1="2"  x2="18" y2="34"/>
+          <path d="M12,9  L18,2  L24,9"  stroke-linejoin="round"/>
+          <path d="M12,27 L18,34 L24,27" stroke-linejoin="round"/>
+        </g>
+        <text x="430" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">FritzBox</text>
+        <text x="430" y="133" text-anchor="middle" font-size="9"  fill="gray">Router · DHCP · WAN</text>
+
+        <!-- ══ TL-SG2210P — switch body ══ -->
+        <line x1="430" y1="135" x2="430" y2="168" stroke="#3b82f6" stroke-width="2" marker-end="url(#ah-b)"/>
+        <text x="442" y="156" font-size="9" fill="gray">1 Gbit</text>
+
+        <g transform="translate(392,170)" fill="none" stroke="#3b82f6" stroke-width="1.6">
+          <rect x="0" y="0" width="76" height="30" rx="5" fill="rgba(59,130,246,0.12)"/>
+          <rect x="4"  y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="12" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="20" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="28" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="36" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="44" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="52" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <rect x="60" y="8" width="6" height="9" rx="1" fill="#3b82f6" fill-opacity="0.5" stroke="none"/>
+          <line x1="69.5" y1="0" x2="69.5" y2="30" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+          <rect x="70" y="4"  width="4" height="8" rx="1" fill="#3b82f6" fill-opacity="0.75" stroke="none"/>
+          <rect x="70" y="16" width="4" height="8" rx="1" fill="#3b82f6" fill-opacity="0.75" stroke="none"/>
+          <circle cx="3" cy="4" r="2" fill="#22c55e" stroke="none"/>
+        </g>
+        <text x="430" y="216" text-anchor="middle" font-size="12" font-weight="800" fill="#3b82f6">TL-SG2210P</text>
+        <text x="430" y="229" text-anchor="middle" font-size="9"  fill="gray">8× Gbit PoE · 2× SFP · Managed</text>
+
+        <!-- ── LEFT DEVICE TRUNK ── -->
+        <polyline points="410,200 300,200 300,258" stroke="#3b82f6" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+        <line x1="85"  y1="258" x2="300" y2="258" stroke="#3b82f6" stroke-width="1.5"/>
+
+        <!-- Gaming PC drop -->
+        <line x1="85" y1="258" x2="85" y2="283" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ah-b)"/>
+        <g transform="translate(66,285)" fill="none" stroke="#64748b" stroke-width="1.5">
+          <rect x="0" y="0"  width="38" height="28" rx="3" fill="rgba(100,116,139,0.1)"/>
+          <rect x="3" y="3"  width="32" height="18" rx="1" fill="rgba(100,116,139,0.12)"/>
+          <line x1="19" y1="28" x2="19" y2="33"/>
+          <rect x="10" y="33" width="18" height="4" rx="2"/>
+        </g>
+        <text x="85"  y="331" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Gaming PC</text>
+        <text x="85"  y="344" text-anchor="middle" font-size="9"  fill="gray">RTX 5080 · 2.5G→1G</text>
+
+        <!-- OptiPlex 7020 drop -->
+        <line x1="200" y1="258" x2="200" y2="283" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ah-b)"/>
+        <g transform="translate(178,285)" fill="none" stroke="#64748b" stroke-width="1.5">
+          <rect x="0" y="0"  width="44" height="10" rx="2" fill="rgba(100,116,139,0.1)"/>
+          <rect x="0" y="13" width="44" height="10" rx="2" fill="rgba(100,116,139,0.1)"/>
+          <circle cx="38" cy="5"  r="2.5" fill="#22c55e" stroke="none"/>
+          <circle cx="38" cy="18" r="2.5" fill="#22c55e" stroke="none"/>
+        </g>
+        <text x="200" y="319" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">OptiPlex 7020</text>
+        <text x="200" y="332" text-anchor="middle" font-size="9"  fill="gray">Phase 1 · Server · 1G</text>
+
+        <!-- Bus-2 trunk -->
+        <line x1="300" y1="258" x2="300" y2="358" stroke="#3b82f6" stroke-width="1.5"/>
+        <line x1="85"  y1="358" x2="300" y2="358" stroke="#3b82f6" stroke-width="1.5"/>
+
+        <!-- Old PC drop -->
+        <line x1="85" y1="358" x2="85" y2="383" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ah-b)"/>
+        <g transform="translate(66,385)" fill="none" stroke="#64748b" stroke-width="1.5">
+          <rect x="0" y="0"  width="38" height="28" rx="3" fill="rgba(100,116,139,0.1)"/>
+          <rect x="3" y="3"  width="32" height="18" rx="1" fill="rgba(100,116,139,0.12)"/>
+          <line x1="19" y1="28" x2="19" y2="33"/>
+          <rect x="10" y="33" width="18" height="4" rx="2"/>
+        </g>
+        <text x="85"  y="430" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Old PC</text>
+        <text x="85"  y="443" text-anchor="middle" font-size="9"  fill="gray">1G</text>
+
+        <!-- PowerEdge (Phase 2, dashed) -->
+        <line x1="200" y1="358" x2="200" y2="383" stroke="rgba(100,116,139,0.45)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#ah)"/>
+        <g transform="translate(174,385)" fill="none" stroke="#64748b" stroke-width="1.5" opacity="0.6">
+          <rect x="0" y="0"  width="52" height="10" rx="2" fill="rgba(100,116,139,0.08)"/>
+          <rect x="0" y="13" width="52" height="10" rx="2" fill="rgba(100,116,139,0.08)"/>
+          <rect x="0" y="26" width="52" height="10" rx="2" fill="rgba(100,116,139,0.08)"/>
+          <circle cx="46" cy="5"  r="2.5" fill="#22c55e" stroke="none"/>
+          <circle cx="46" cy="18" r="2.5" fill="#22c55e" stroke="none"/>
+          <circle cx="46" cy="31" r="2.5" fill="#475569" stroke="none"/>
+        </g>
+        <text x="200" y="432" text-anchor="middle" font-size="11" font-weight="600" fill="gray">PowerEdge R720</text>
+        <text x="200" y="445" text-anchor="middle" font-size="9"  fill="gray">Phase 2 · Proxmox · 128GB</text>
+
+        <!-- ── WAP PoE BRANCH (dashed violet) ── -->
+        <polyline points="448,200 448,275 340,275 340,472"
+                  stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-dasharray="5 3"
+                  stroke-linejoin="round" marker-end="url(#ah-v)"/>
+        <rect x="454" y="262" width="30" height="15" rx="3" fill="rgba(167,139,250,0.18)"/>
+        <text x="469" y="273" text-anchor="middle" font-size="9" fill="#a78bfa" font-weight="700">PoE</text>
+
+        <!-- WAP icon -->
+        <g transform="translate(322,474)" fill="none" stroke="#a78bfa" stroke-width="1.7">
+          <path d="M2,28 Q2,14 18,14 Q34,14 34,28 Z" fill="rgba(167,139,250,0.1)"/>
+          <line x1="18" y1="28" x2="18" y2="33"/>
+          <rect x="10" y="33" width="16" height="4" rx="2" fill="rgba(167,139,250,0.15)" stroke="none"/>
+          <path d="M7,12  Q18,3  29,12" stroke-linecap="round"/>
+          <path d="M1,6   Q18,-4 35,6"  stroke-linecap="round" opacity="0.45"/>
+        </g>
+        <text x="340" y="524" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">EAP670</text>
+        <text x="340" y="537" text-anchor="middle" font-size="9"  fill="gray">WiFi 6 · AX3000 · PoE</text>
+
+        <!-- ══ LR UPLINK ══ -->
+        <polyline points="468,185 548,185 700,185 700,270"
+                  stroke="#3b82f6" stroke-width="2" fill="none"
+                  stroke-linejoin="round" marker-end="url(#ah-b)"/>
+        <rect x="571" y="175" width="80" height="16" rx="4" fill="rgba(59,130,246,0.15)"/>
+        <text x="611" y="186" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="700">1 Gbit Cat6</text>
+
+        <!-- ══ TL-SG108 (LR) ══ -->
+        <g transform="translate(672,272)" fill="none" stroke="#34d399" stroke-width="1.6">
+          <rect x="0" y="0" width="56" height="26" rx="5" fill="rgba(52,211,153,0.12)"/>
+          <rect x="3"  y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="10" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="17" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="24" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="31" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="38" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="45" y="8" width="5" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="52" y="8" width="2" height="8" rx="1" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <circle cx="3" cy="3" r="2" fill="#22c55e" stroke="none"/>
+        </g>
+        <text x="700" y="313" text-anchor="middle" font-size="12" font-weight="700" fill="#34d399">TL-SG108</text>
+        <text x="700" y="326" text-anchor="middle" font-size="9"  fill="gray">8× Gbit · unmanaged</text>
+
+        <!-- LR bus to devices -->
+        <line x1="700" y1="298" x2="700" y2="350" stroke="#34d399" stroke-width="1.5"/>
+        <line x1="615" y1="350" x2="790" y2="350" stroke="#34d399" stroke-width="1.5"/>
+
+        <!-- TV -->
+        <line x1="615" y1="350" x2="615" y2="373" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah-g)"/>
+        <g transform="translate(592,375)" fill="none" stroke="#34d399" stroke-width="1.5">
+          <rect x="0" y="0"  width="46" height="30" rx="3" fill="rgba(52,211,153,0.1)"/>
+          <rect x="3" y="3"  width="40" height="20" rx="1" fill="rgba(52,211,153,0.12)"/>
+          <line x1="12" y1="30" x2="8"  y2="36"/>
+          <line x1="34" y1="30" x2="38" y2="36"/>
+        </g>
+        <text x="615" y="423" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">TV</text>
+        <text x="615" y="436" text-anchor="middle" font-size="9"  fill="gray">1G · Optical→Sony</text>
+
+        <!-- Apple -->
+        <line x1="700" y1="350" x2="700" y2="373" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah-g)"/>
+        <g transform="translate(681,375)" fill="none" stroke="#64748b" stroke-width="1.5">
+          <rect x="0" y="0"  width="38" height="28" rx="3" fill="rgba(100,116,139,0.1)"/>
+          <rect x="3" y="3"  width="32" height="18" rx="1" fill="rgba(100,116,139,0.12)"/>
+          <line x1="19" y1="28" x2="19" y2="33"/>
+          <rect x="10" y="33" width="18" height="4" rx="2"/>
+        </g>
+        <text x="700" y="420" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Apple Setup</text>
+        <text x="700" y="433" text-anchor="middle" font-size="9"  fill="gray">Mac · 1G</text>
+
+        <!-- Sony STR-DB790 LR -->
+        <line x1="790" y1="350" x2="790" y2="373" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah-g)"/>
+        <g transform="translate(762,375)" fill="none" stroke="#34d399" stroke-width="1.5">
+          <rect x="0" y="0"  width="56" height="26" rx="3" fill="rgba(52,211,153,0.1)"/>
+          <circle cx="9"  cy="13" r="5" />
+          <circle cx="9"  cy="13" r="2" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <circle cx="22" cy="13" r="5" />
+          <circle cx="22" cy="13" r="2" fill="#34d399" fill-opacity="0.5" stroke="none"/>
+          <rect x="32" y="7" width="20" height="12" rx="2" fill="rgba(52,211,153,0.18)"/>
+          <circle cx="53" cy="4" r="2" fill="#22c55e" stroke="none"/>
+        </g>
+        <text x="790" y="415" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Sony STR-DB790</text>
+        <text x="790" y="428" text-anchor="middle" font-size="9"  fill="gray">5.1 · LR · IR via HA</text>
+
+        <!-- ══ LEGEND ══ -->
+        <g transform="translate(548,484)" font-size="10" fill="currentColor">
+          <rect x="0" y="0" width="336" height="72" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+          <text x="12" y="16" font-weight="700" font-size="8" fill="gray" letter-spacing="0.5">LEGEND</text>
+          <line x1="12" y1="30" x2="38" y2="30" stroke="#3b82f6" stroke-width="2"/>
+          <text x="44" y="34">Ethernet · 1 Gbit</text>
+          <line x1="12" y1="52" x2="38" y2="52" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <text x="44" y="56">PoE Cable</text>
+          <line x1="180" y1="30" x2="206" y2="30" stroke="rgba(100,116,139,0.5)" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <text x="212" y="34">Phase 2 (planned)</text>
+          <line x1="180" y1="52" x2="206" y2="52" stroke="#34d399" stroke-width="2"/>
+          <text x="212" y="56">LR Network</text>
+        </g>
+
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== SWITCHES ===== -->
+  <section class="section">
+    <h2><span class="num">SWITCHES</span>Rack Switch + Living Room Switch</h2>
+
+    <div class="twocol">
+      <div>
+        <div class="comp">
+          <h3>TP-Link TL-SG2210P <span class="price-tag">~75 €</span></h3>
+          <div class="why">8× Gbit PoE (powers WAP without a separate PSU), 2× SFP for future fibre option, VLAN/QoS managed. Sits on a 1U shelf in the rack.</div>
+          <div class="alt"><strong>Geizhals:</strong> <a href="https://geizhals.de/" target="_blank">TP-Link TL-SG2210P price comparison</a></div>
+        </div>
+      </div>
+      <div>
+        <div class="comp">
+          <h3>TP-Link TL-SG108 <span class="price-tag">~15 €</span></h3>
+          <div class="why">8× Gbit, no PoE, no management — simple and cheap. More than enough for the living room (TV, Apple, music setup, spare). Connects to the rack switch via a standard Cat6 cable.</div>
+          <div class="alt"><strong>Amazon:</strong> <a href="https://www.amazon.de/s?k=tp-link+tl-sg108" target="_blank">amazon.de — TL-SG108</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="icon">💡</div>
+      <div class="body"><strong>SFP Ports:</strong> The 2× SFP on the rack switch can later be used for a fibre connection to the living room (LC-LC Duplex 10m ~12 €, SFP modules ~10 € each). FritzBox has no LAN SFP → router uplink stays standard RJ45.</div>
+    </div>
+  </section>
+
+  <!-- ===== WAP ===== -->
+  <section class="section">
+    <h2><span class="num">WIFI</span>Access Point</h2>
+
+    <div class="comp">
+      <h3>TP-Link EAP670 <span class="price-tag">~80 €</span></h3>
+      <div class="why">WiFi 6 (AX3000), PoE-powered (no PSU), Omada Controller runs free on Proxmox as a Docker container. Ceiling or wall mount for best coverage.</div>
+      <div class="alt">
+        <strong>Budget option:</strong> EAP615 (~50 €, WiFi 6 AX1800) if budget is tight<br>
+        <strong>Omada Controller:</strong> Docker image on Proxmox — runs as LXC, no extra hardware needed
+      </div>
+    </div>
+    <div class="callout ok">
+      <div class="icon">✓</div>
+      <div class="body"><strong>PoE Trick:</strong> The WAP is powered directly from the rack switch — just one cable (data + power). No PSU, no extra power outlet needed.</div>
+    </div>
+  </section>
+
+  <!-- ===== CISCO ===== -->
+  <section class="section">
+    <h2><span class="num">CISCO</span>SF300-48p → Barn</h2>
+    <div class="callout warn">
+      <div class="icon">🏚</div>
+      <div class="body"><strong>Cisco SF300-48p leaves the rack.</strong> 48 ports sound good, but only 4× Gigabit — the rest is 100 Mbit. For PoE cameras in the barn that's ideal: 100 Mbit is plenty for IP cameras and PoE is already there. In the homelab rack it would just waste space.</div>
+    </div>
+    <dl class="kv">
+      <dt>New role</dt><dd>Barn — PoE cameras (100 Mbit is sufficient)</dd>
+      <dt>Rack replacement</dt><dd>TL-SG2210P (8× Gbit PoE + 2× SFP)</dd>
+      <dt>Benefit</dt><dd>All rack devices on Gigabit, WAP via PoE, no oversized switch in the rack</dd>
+    </dl>
+  </section>
+
+  <!-- ===== VLAN ===== -->
+  <section class="section">
+    <h2><span class="num">VLAN</span>Network Segmentation (optional, later)</h2>
+    <table class="tbl">
+      <thead><tr><th>VLAN</th><th>Name</th><th>Devices</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Management</td><td>Switch, iDRAC, WAP</td><td>Admin access, separated from user traffic</td></tr>
+        <tr><td>10</td><td>Home</td><td>PCs, Server, Apple, TV</td><td>Regular home network traffic</td></tr>
+        <tr><td>20</td><td>IoT</td><td>Snapcast Pis, smart devices</td><td>Isolated from main network</td></tr>
+        <tr><td>30</td><td>Guest / WiFi</td><td>Phones, tablets, guests</td><td>No access to home network devices</td></tr>
+        <tr><td>40</td><td>Cameras</td><td>PoE cams (barn)</td><td>Isolated, NVR access only</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info">
+      <div class="icon">ℹ</div>
+      <div class="body">VLANs require the managed TL-SG2210P + Proxmox with virtual bridges. Not needed for Phase 1 — keep everything in the same network for now. Set up in Phase 2 when the server is running.</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Homelab · Networking · June 2026
+  </footer>
+</div>
+<script src="../../theme.js"></script>
+</body>
+</html>

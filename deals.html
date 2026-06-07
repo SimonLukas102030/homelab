@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deals — Homelab — IT Hub</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Where &amp; how to buy</h1>
+    <p class="lead">Online stores, used marketplaces, refurbished servers, search strategies. Which platform for which component — and what to watch out for when buying used.</p>
+  </header>
+
+  <!-- ===== ONLINE STORES ===== -->
+  <section class="section">
+    <h2><span class="num">01</span>New — Online Stores</h2>
+
+    <div class="comp">
+      <h3>Geizhals.de <span class="price-tag">Price Comparison</span></h3>
+      <p class="why"><strong>First stop.</strong> Not a shop itself, but a price comparison across all German retailers. Set up a price alert (Geizhals account → "Watch" list) — you get an email as soon as the price drops below your threshold. Free.</p>
+      <p class="alt"><strong>Tip:</strong> Filter "in stock only" + "Mindfactory / Alternate / Amazon" narrows it down to reputable retailers. Don't just click the first price — often retailer #2 for €5 more is significantly better on service.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Mindfactory.de <span class="price-tag">Components</span></h3>
+      <p class="why">Best price-to-performance pick for CPU, motherboard, RAM, SSD, PSU. Fast shipping, Mindfactory MidnightShopping sales (seasonal, often mid-Q4) are aggressive. Watch out: occasional B-stock hidden in listings — look for "Mindstar" items (discounted, often outlet).</p>
+    </div>
+
+    <div class="comp">
+      <h3>Alternate.de <span class="price-tag">Premium Components</span></h3>
+      <p class="why">Slightly more expensive than Mindfactory, but better B2C experience: faster RMA process, "Outlet" section (tested returns with 1-year warranty, often 15–25% cheaper). Good for PSU, case, coolers — components where you want warranty coverage.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Amazon.de <span class="price-tag">Fast &amp; Flexible</span></h3>
+      <p class="why">Prime = next day. Prices often worse than Mindfactory, but returns are best-in-class. Good for things you're unsure about (will the cooler fit the case?). <strong>Warning:</strong> Marketplace sellers (not "Sold and shipped by Amazon") can ship fakes — especially NVMe drives.</p>
+    </div>
+
+    <div class="comp">
+      <h3>NBB / notebooksbilliger.de <span class="price-tag">Deals</span></h3>
+      <p class="why">Despite the name, they sell everything. Deals are often insane (Black Friday, April sales). Subscribe to the newsletter — spam is manageable.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="icon">📅</span>
+      <div class="body"><strong>Seasonal lows:</strong> Black Friday / Cyber Monday (late November), Prime Day (July), Mindfactory MidnightShopping (sporadic, ~10 PM announced). Watch components on Geizhals 6–8 weeks beforehand — if the price is already dropping before BF, Black Friday won't be anything special.</div>
+    </div>
+  </section>
+
+  <!-- ===== USED ===== -->
+  <section class="section">
+    <h2><span class="num">02</span>Used — Marketplaces</h2>
+
+    <div class="comp">
+      <h3>eBay-Kleinanzeigen / Kleinanzeigen.de <span class="price-tag">Best Used Source</span></h3>
+      <p class="why">For components where price &gt; warranty: <strong>CPU, RAM, case, HDD (carefully), coolers, fans</strong>. Not for PSU (a dying PSU can kill everything else) or NVMe (lifespan hard to verify).</p>
+
+      <p><strong>Search strategy:</strong></p>
+      <ul>
+        <li>Precise search term: <code>"Ryzen 7 5700X"</code> without quotes, then filter <strong>Shipping available</strong> + <strong>Private sellers</strong> (commercial = 19% VAT baked into price).</li>
+        <li>Search radius: local first (50 km, self-pickup = €0 shipping), then expand if nothing nearby.</li>
+        <li><strong>Save search</strong> (bell icon) → push notification on new listings. Listings &lt; 30 min old = often a real bargain, &gt; 7 days = price is clearly too high.</li>
+        <li>Sort: "Newest first" — old listings are often already gone or overpriced.</li>
+      </ul>
+
+      <p><strong>Negotiating:</strong> Standard is −10 to −15%. Write politely, give a concrete reason (shipping, self-pickup, quick payment). Lowball offers (−40%) get ignored.</p>
+
+      <p><strong>Payment:</strong> PayPal "Goods &amp; Services" (buyer protection, costs the seller ~3% — hence often "Friends &amp; Family only" → that's a risk). For local pickup: cash or bank transfer after testing.</p>
+
+      <p class="alt"><strong>What to ask:</strong> Purchase date, original packaging &amp; receipt (= remaining warranty!), reason for selling, for CPU: no bent pins (ask for photo), for RAM: model number (branded RAM ≠ no-name), for HDD: ask for SMART values.</p>
+    </div>
+
+    <div class="comp">
+      <h3>eBay (the auction site) <span class="price-tag">Auction + Buyer Protection</span></h3>
+      <p class="why">For rare items that don't show up on Kleinanzeigen, or for auctions (sniping just before end = often cheaper). eBay takes buyer protection seriously — if something arrives broken, you get your money back. But: factor in shipping costs (often €5–15), and seller prices are higher than on Kleinanzeigen.</p>
+      <p class="alt"><strong>Tip:</strong> "Buy It Now + Best Offer" listings — sellers often accept 70–80% of the listed price if the listing has been up for a week.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Hardwareluxx / ComputerBase Marketplace <span class="price-tag">Enthusiasts</span></h3>
+      <p class="why">Forum marketplace with user reputation. Sellers are usually tech enthusiasts who know exactly what they have. Prices are fairly reasonable, almost no lemons. Registration required. Good for: high-end components, Gigabyte AORUS motherboards, custom water-cooling parts.</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="icon">⚠</span>
+      <div class="body"><strong>Used-Buying NEVER:</strong> Power supplies (PSU) — an aging PSU can take the whole system with it when it dies. NVMe SSDs without SMART values (check the lifetime counter). Fans &gt; 3 years old (worn bearings, will hum). HDDs without SMART output. Motherboards without original accessories (often bent pins in the socket).</div>
+    </div>
+  </section>
+
+  <!-- ===== REFURB ===== -->
+  <section class="section">
+    <h2><span class="num">03</span>Refurbished Server Vendors</h2>
+
+    <div class="comp">
+      <h3>ServerShop24.de <span class="price-tag">DE / Tower</span></h3>
+      <p class="why">German company, refurbished Dell PowerEdge / HP ProLiant tower servers with warranty. T340 with Xeon E-2236 + 32 GB ECC + 2× 1 TB can be found around €600–750. Fast shipping, straightforward RMA. <strong>But:</strong> for bedroom use you'll need a fan mod — the original tower fans are loud even in T-series models.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Bargain Hardware <span class="price-tag">UK / Wholesale</span></h3>
+      <p class="why">UK-based, good for 1U/2U rack servers (HP DL360 / Dell R630). Focuses on bulk/B2B but individual sales are possible. Shipping to DE works, but factor in customs &amp; Brexit fees. <strong>Warning:</strong> rack servers in a bedroom are a noise disaster.</p>
+    </div>
+
+    <div class="comp">
+      <h3>NewServerLife / ServerMonkey (US) <span class="price-tag">Global Market</span></h3>
+      <p class="why">Larger selection, often cheaper per component, but: expensive shipping, voltage converters for US PSUs, customs fees. For 99% of cases the DE market has the same stuff — stick with local.</p>
+    </div>
+  </section>
+
+  <!-- ===== DELL POWEREDGE SPECIFICS ===== -->
+  <section class="section">
+    <h2><span class="num">3.5</span>Dell PowerEdge — Used Purchase Specifics</h2>
+
+    <div class="prose">
+      <p>Your main purchase — the server itself. Traded on eBay and Kleinanzeigen, often from companies refreshing their server fleet. What to check:</p>
+
+      <h3>R720 / R730 / R740 — what to verify before buying</h3>
+      <ul>
+        <li><strong>Service Tag</strong> — enter it at <code>dell.com/support</code> → full original configuration visible (which disks, which RAID controller, purchase date, is warranty still active?)</li>
+        <li><strong>iDRAC license</strong>: Express (free, no KVM-over-IP) or Enterprise (remote KVM, ~€100 if purchased separately). Ask the seller explicitly which one is active.</li>
+        <li><strong>RAID controller</strong>: PERC H310 / H710 / H730. For Proxmox ZFS you want <strong>HBA mode (IT mode)</strong>. The H710 can be flashed — often already done at time of sale, but ask explicitly.</li>
+        <li><strong>RAM slot population</strong>: ask for a photo of the interior. Some sellers only populate 4 of 24 slots — RAM expansion is more expensive later if the kit slots are inconsistent.</li>
+        <li><strong>Caddies included?</strong>: Drive caddies (HDD tray rails) are expensive individually (~€15 each). Seller should include all 8.</li>
+        <li><strong>iDRAC reset</strong>: seller should reset iDRAC to factory defaults before shipping — otherwise you have their account in there.</li>
+        <li><strong>PSU count</strong>: 1× or 2× redundant? For a GPU build you want 2× 1100 W.</li>
+        <li><strong>GPU riser bracket</strong> (for Medium / Pro): ask for a photo of the GPU slot area. Standard R730 has no GPU riser — it's an optional add-on.</li>
+      </ul>
+
+      <h3>Realistic Price Ranges (as of June 2026, eBay/Kleinanzeigen DE)</h3>
+      <table class="tbl">
+        <thead>
+          <tr><th>Model</th><th>Config</th><th>Used Range</th><th>Refurb (ServerShop24)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>R720 (2U)</td>     <td>2× E5-2680v2, 64 GB DDR3</td>  <td class="num">€180–280</td><td class="num">€350–450</td></tr>
+          <tr><td>R720xd (2U)</td>   <td>+ 12 LFF Bays</td>             <td class="num">€220–340</td><td class="num">€400–500</td></tr>
+          <tr><td>R730 (2U)</td>     <td>2× E5-2680v3, 64 GB DDR4</td>  <td class="num">€350–500</td><td class="num">€500–650</td></tr>
+          <tr><td>R730xd (2U)</td>   <td>+ 12 LFF Bays</td>             <td class="num">€400–600</td><td class="num">€550–750</td></tr>
+          <tr><td>R730 GPU-enabled</td><td>+ Riser, 1100 W PSU</td>     <td class="num">€420–600</td><td class="num">€600–800</td></tr>
+          <tr><td>R740 (2U)</td>     <td>2× Gold 6140, 128 GB DDR4</td> <td class="num">€700–950</td><td class="num">€900–1.200</td></tr>
+          <tr><td>R740xd (2U)</td>   <td>+ 12 NVMe Bays</td>            <td class="num">€900–1.300</td><td class="num">€1.200–1.500</td></tr>
+        </tbody>
+      </table>
+
+      <h3>GPU Cards — Tesla P40 / RTX 3090 Used Sources</h3>
+      <ul>
+        <li><strong>Tesla P40 24 GB</strong>: eBay (DE/EU) ~€200–280. Search term: <code>"Tesla P40"</code>. Very popular among LLM hobbyists, price fluctuates. Alibaba / Chinese resellers often cheaper (~€170) — but 4 weeks shipping, customs, no buyer protection.</li>
+        <li><strong>RTX 3090 24 GB</strong>: Kleinanzeigen / eBay ~€600–750. Search term: <code>"RTX 3090"</code>. 24 GB variant, NOT 3090 Ti (regular 3090 is better due to lower TDP). For used: mining history is problematic — ask about fan condition, hot-spot values (Furmark test).</li>
+        <li><strong>RTX 3060 12 GB</strong>: Kleinanzeigen ~€200–260. Search term: <code>"RTX 3060 12GB"</code> (NOT the 8 GB variant!).</li>
+      </ul>
+
+      <h3>Rack Frames — Used Sources</h3>
+      <ul>
+        <li><strong>Kleinanzeigen</strong>: Search <code>"19 Zoll Rack"</code>, <code>"Server Rack 12U"</code>. Often self-pickup only because heavy (15U closed: ~30 kg). Locally you can find up to 70% discount vs. new.</li>
+        <li><strong>eBay</strong>: Triton, StarTech, APC, IBM. APC NetShelter models often have built-in PDUs (bonus).</li>
+        <li><strong>New</strong>: Reichelt, NWMall, Geizhals → 9U/12U open frame ~€140–250 new.</li>
+      </ul>
+
+      <h3>PDU Used Market</h3>
+      <ul>
+        <li><strong>APC AP7900B</strong> (Switched, 8 outlets): eBay €80–150. Check firmware version (AOS &gt;= 6.4 for modern web UI), battery age (internal RAM backup battery ~5 years).</li>
+        <li><strong>APC AP8941</strong> (Switched + Metered): eBay €180–250. Better web UI, per-outlet power logging.</li>
+        <li><strong>Brennenstuhl Premium-Line</strong> (manually switchable, 8-way with individual switches): new ~€40 — cheapest option, but no remote control.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== CHECKLISTS ===== -->
+  <section class="section">
+    <h2><span class="num">04</span>Checklists</h2>
+
+    <div class="twocol">
+      <div>
+        <div class="prose">
+          <h3>Before paying for used hardware</h3>
+          <ul>
+            <li>Model number + photo of original box</li>
+            <li>Receipt &amp; purchase date (remaining warranty!)</li>
+            <li>SMART values (HDDs, NVMe — <code>smartctl -a</code>)</li>
+            <li>For CPU: photo of socket pins (bent pins?)</li>
+            <li>For RAM: exact model number (no no-name)</li>
+            <li>For mobo: POST test photo, BIOS version</li>
+            <li>For PSU: <strong>Skip</strong> — never buy used PSU</li>
+            <li>For fans: age, bearing noise (test video)</li>
+            <li>Shipping method: DHL insured, not Hermes parcel</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="prose">
+          <h3>Negotiation levers</h3>
+          <ul>
+            <li>Offer self-pickup (seller saves on packaging)</li>
+            <li>Instant payment via PayPal F&amp;F (your risk, but strongest lever)</li>
+            <li>Multiple components from the same seller = bundle discount</li>
+            <li>Polite, brief, with a concrete number: "Would you accept €X?"</li>
+            <li>Geizhals screenshot of lowest new price → "70% of new for used would be fair"</li>
+            <li>Time is on your side — if a listing has been up 7 days, the seller will come down</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICE RANGES ===== -->
+  <section class="section">
+    <h2><span class="num">05</span>Realistic Price Ranges (as of June 2026)</h2>
+
+    <div class="prose">
+      <p>Prices fluctuate — these ranges are what you should currently be seeing on Kleinanzeigen / Mindfactory. If a listing is <strong>way below</strong> this: caution, often a scam. Way above: ignore it.</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>Component</th><th>Used (Kleinanzeigen)</th><th>New (Mindfactory/Geizhals)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ryzen 5 5600</td>     <td class="num">€80–110</td>    <td class="num">€130–150</td></tr>
+          <tr><td>Ryzen 7 5700X</td>    <td class="num">€150–185</td>   <td class="num">€200–230</td></tr>
+          <tr><td>Ryzen 7 5800X3D</td>  <td class="num">€260–310</td>   <td class="num">€340–380</td></tr>
+          <tr><td>B550M Pro4</td>       <td class="num">€60–80</td>     <td class="num">€90–110</td></tr>
+          <tr><td>X570 Aorus Elite</td> <td class="num">€90–120</td>    <td class="num">€140–170</td></tr>
+          <tr><td>2× 16 GB DDR4-3200 (Consumer UDIMM)</td><td class="num">€90–140</td>    <td class="num">€140–200</td></tr>
+          <tr><td>2× 32 GB DDR4-3200 (Consumer UDIMM)</td><td class="num">€180–260</td>  <td class="num">€280–380</td></tr>
+          <tr><td>16 GB DDR3-1866 ECC RDIMM (Server)</td><td class="num">€20–30</td>    <td class="num">— (EOL)</td></tr>
+          <tr><td>16 GB DDR4-2133 ECC RDIMM (Server)</td><td class="num">€35–55</td>    <td class="num">€60–85</td></tr>
+          <tr><td>32 GB DDR4-2400/2666 ECC RDIMM (Server)</td><td class="num">€80–130</td>   <td class="num">€140–200</td></tr>
+          <tr><td>128 GB Kit DDR3 (8× 16 GB)</td><td class="num">€180–230</td>          <td class="num">— (EOL)</td></tr>
+          <tr><td>128 GB Kit DDR4 (4× 32 GB)</td><td class="num">€340–460</td>          <td class="num">€560–700</td></tr>
+          <tr><td>256 GB Kit DDR4 (8× 32 GB)</td><td class="num">€720–900</td>          <td class="num">€1.100–1.400</td></tr>
+          <tr><td>NVMe 512 GB Gen4</td> <td class="num">—</td>          <td class="num">€40–55</td></tr>
+          <tr><td>NVMe 1 TB Gen4</td>   <td class="num">€55–70</td>     <td class="num">€75–95</td></tr>
+          <tr><td>WD Red Plus 2 TB</td> <td class="num">€35–50</td>     <td class="num">€65–80</td></tr>
+          <tr><td>WD Red Plus 4 TB</td> <td class="num">€60–80</td>     <td class="num">€100–120</td></tr>
+          <tr><td>Fractal Define R5</td><td class="num">€55–90</td>     <td class="num">— (EOL, R6/7 instead)</td></tr>
+          <tr><td>Noctua NF-A12x25</td> <td class="num">€20–25</td>     <td class="num">€30–35</td></tr>
+          <tr><td>Noctua NH-U12S</td>   <td class="num">€40–55</td>     <td class="num">€60–75</td></tr>
+          <tr><td>be quiet! 550 W Gold</td><td class="num"><em>don't buy used</em></td><td class="num">€75–90</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="index.html">← Back to Overview</a>
+  </footer>
+</div>
+
+<script src="../../theme.js"></script>
+</body>
+</html>

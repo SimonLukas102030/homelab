@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Server Phase 2 — Homelab</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html" class="active">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Server — Phase 2</h1>
+    <p class="lead">Dell PowerEdge R720 or R730 — coming after the summer job. Until then the OptiPlex 7020 SFF is running. Noctua fan mod is mandatory for the bedroom.</p>
+  </header>
+
+  <!-- ===== PHASE 1 BRIDGE ===== -->
+  <section class="section">
+    <h2><span class="num">NOW</span>Phase 1 — Dell OptiPlex 7020 SFF</h2>
+    <div class="callout ok">
+      <div class="icon">✓</div>
+      <div class="body"><strong>Already on hand.</strong> i3, SFF form factor — fits on a 1U rack shelf. Quiet, low power draw. Perfectly adequate for 3–4 months of Proxmox onboarding, first VMs, and Snapcast testing. Currently mounted on the 1U shelf alongside the Pi 4 and 10.1" display — the display overlaps the blank 13 cm front face of the OptiPlex (overlap layout), bringing total assembly width to ~40 cm, which fits within the 44.4 cm rack clearance.</div>
+    </div>
+    <dl class="kv" style="margin-top:14px;">
+      <dt>Use Case</dt><dd>Proxmox VE, 2–3 light VMs, Snapcast client testing</dd>
+      <dt>Rack Mount</dt><dd>1U shelf — SFF fits on it with no trouble</dd>
+      <dt>Noise</dt><dd>Very quiet — no mod needed</dd>
+      <dt>Replacement</dt><dd>Replace with PowerEdge after summer job</dd>
+    </dl>
+  </section>
+
+  <!-- ===== R720 VS R730 ===== -->
+  <section class="section">
+    <h2><span class="num">CHOICE</span>R720 vs R730 — Comparison</h2>
+
+    <div class="tier-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="tier-card recommended" style="--tier-color:#34d399;--tier-rgb:52,211,153;">
+        <div class="tier-tag">Recommendation</div>
+        <h3>Dell R720 v2</h3>
+        <div class="tier-price">~330 €</div>
+        <div class="tier-sub">DDR3 · 128 GB · Budget King</div>
+        <ul class="tier-list">
+          <li><strong>2× Xeon E5 v2</strong> — 10-core, 2.2–2.8 GHz</li>
+          <li><strong>128 GB DDR3 ECC</strong> right away</li>
+          <li><strong>8× SFF bays</strong> (2.5") for SSDs/HDDs</li>
+          <li><strong>iDRAC7 Enterprise</strong> included</li>
+          <li><strong>2× redundant PSU</strong></li>
+          <li>DDR3 is completely sufficient for Proxmox/VMs</li>
+          <li class="no">DDR3 (older platform, 2013)</li>
+          <li class="no">No PCIe slot for GPU without riser</li>
+        </ul>
+        <a class="tier-cta" href="https://www.ebay.de/itm/145556305762" target="_blank">eBay listing →</a>
+      </div>
+
+      <div class="tier-card" style="--tier-color:#3b82f6;--tier-rgb:59,130,246;">
+        <div class="tier-tag">If budget allows</div>
+        <h3>Dell R730 v3/v4</h3>
+        <div class="tier-price">~450–550 €</div>
+        <div class="tier-sub">DDR4 · 64 GB · newer platform</div>
+        <ul class="tier-list">
+          <li><strong>2× Xeon E5 v3/v4</strong> — 8–12 core</li>
+          <li><strong>64 GB DDR4 ECC</strong> (128 GB upgrade ~80 €)</li>
+          <li><strong>8× SFF or 16× SFF</strong> depending on config</li>
+          <li><strong>iDRAC8 Enterprise</strong></li>
+          <li><strong>2× redundant PSU</strong></li>
+          <li>DDR4 — more efficient, less power draw</li>
+          <li class="no">128 GB DDR4 version: ~900–1300 € (too expensive)</li>
+        </ul>
+        <a class="tier-cta" href="https://www.ebay.de/itm/116290115494" target="_blank">eBay listing →</a>
+      </div>
+    </div>
+
+    <div class="callout info" style="margin-top:4px;">
+      <div class="icon">💡</div>
+      <div class="body"><strong>Purchase strategy:</strong> R720 with 128 GB is the sweet spot. R730 with 128 GB DDR4 costs 3–4× as much — the added value doesn't justify that for a homelab. If you want the R730: buy 64 GB, add 64 GB DDR4 RDIMMs later (~80 €).</div>
+    </div>
+  </section>
+
+  <!-- ===== NOCTUA MOD ===== -->
+  <section class="section">
+    <h2><span class="num">NOCTUA</span>Fan Mod — Mandatory for the Bedroom</h2>
+
+    <div class="callout danger">
+      <div class="icon">🔊</div>
+      <div class="body"><strong>Stock fans are intolerably loud:</strong> R720/R730 run at 8,000+ RPM out of the box — over 50 dB(A). Without the mod the server is not sleep-compatible in a bedroom. With Noctua mod: ~30–35 dB(A) idle.</div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;">What gets installed</h3>
+    <div class="comp">
+      <h3>6× Noctua NF-A6x25 PWM <span class="price-tag">6 × 17 € = 101 €</span></h3>
+      <div class="why">R720/R730 have 6 hot-swap fan slots each 60×60×38 mm. Noctua doesn't make 38 mm deep fans — NF-A6x25 (60×60×25 mm) is 13 mm shorter but physically fits in the bay. The reduced airflow is compensated by IPMI temperature control.</div>
+      <div class="alt">
+        <strong>Amazon:</strong> <a href="https://www.amazon.de/dp/B00VXTANZ4" target="_blank">amazon.de — NF-A6x25 PWM</a> &nbsp;|&nbsp;
+        <strong>Geizhals:</strong> <a href="https://geizhals.de/noctua-nf-a6x25-pwm-a1525187.html" target="_blank">Price comparison</a>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;">Connector Pinout — Dell ≠ Standard</h3>
+    <table class="tbl">
+      <thead><tr><th>Signal</th><th>Standard PWM (PC)</th><th>Dell PowerEdge</th></tr></thead>
+      <tbody>
+        <tr><td>GND</td><td>Black</td><td>Black ✓</td></tr>
+        <tr><td>+12V</td><td>Yellow</td><td><strong style="color:#f59e0b;">Red !</strong></td></tr>
+        <tr><td>Tachometer</td><td>Green</td><td><strong style="color:#f59e0b;">Yellow !</strong></td></tr>
+        <tr><td>PWM</td><td>Blue</td><td>Blue ✓</td></tr>
+      </tbody>
+    </table>
+
+    <div class="twocol" style="margin-top:16px;">
+      <div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:10px;">Option A — Adapter cable (easier)</h3>
+        <p style="font-size:13.5px;color:var(--text-muted);line-height:1.55;">Ready-made "Dell R720 Fan Adapter → 4-Pin PWM" cables from eBay, ~5 €/piece. Plug in, done. No soldering.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:6px;">Search: <em>"Dell R720 fan adapter Noctua"</em> on eBay.de</p>
+      </div>
+      <div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:10px;">Option B — Re-pin yourself (cheaper)</h3>
+        <p style="font-size:13.5px;color:var(--text-muted);line-height:1.55;">Cut the Dell connector off the old fan leaving ~5 cm of cable, splice onto the Noctua cable using heat-shrink solder connectors. No soldering iron needed, ~2 € material per fan.</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:6px;">Guide: <a href="https://gavin-keli.medium.com/how-to-build-a-silent-dell-server-d15e44aedd4f" target="_blank">Medium — Silent Dell Server (pinout photos)</a></p>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin:24px 0 12px;">IPMI Fan Control — required after the mod</h3>
+    <div class="callout warn">
+      <div class="icon">⚠</div>
+      <div class="body"><strong>iDRAC spins up to 100% when it detects non-Dell fans.</strong> IPMI manual mode disables automatic thermal protection — keep an eye on temperatures yourself!</div>
+    </div>
+
+    <div class="diagram">
+# Enable manual mode
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P &lt;password&gt; raw 0x30 0x30 0x01 0x00
+
+# Set fan speed to 20% (0x14 = 20 decimal)
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P &lt;password&gt; raw 0x30 0x30 0x02 0xff 0x14
+
+# Re-enable automatic control (e.g. under heavy load)
+ipmitool -I lanplus -H &lt;iDRAC-IP&gt; -U root -P &lt;password&gt; raw 0x30 0x30 0x01 0x01
+    </div>
+
+    <div class="callout danger">
+      <div class="icon">🔒</div>
+      <div class="body"><strong>Freeze iDRAC firmware!</strong> IPMI fan control only works up to firmware <strong>3.30.30.30</strong>. Newer versions block the raw command. Check the current firmware version before the first update — if it's compatible, <strong>do not update</strong>.</div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin:20px 0 10px;">Useful guides</h3>
+    <ul style="font-size:13.5px;color:var(--text-muted);line-height:2;">
+      <li><a href="https://linustechtips.com/topic/1227789-silent-dell-poweredge-server-mod/" target="_blank">LTT Forum — Silent Dell PowerEdge Mod (R710/R720/R730)</a></li>
+      <li><a href="https://gavin-keli.medium.com/how-to-build-a-silent-dell-server-d15e44aedd4f" target="_blank">Medium — How to Build a Silent Dell Server (images + pinout)</a></li>
+      <li><a href="https://blog.hessindustria.com/quiet-fans-on-dell-poweredge-servers-via-ipmi/" target="_blank">hessindustria.com — Quiet Fans via IPMI (commands in detail)</a></li>
+    </ul>
+  </section>
+
+  <!-- ===== PURCHASE LINKS ===== -->
+  <section class="section">
+    <h2><span class="num">BUY</span>Current Listings</h2>
+    <table class="tbl">
+      <thead><tr><th>Model</th><th>Specs</th><th>Price</th><th>Link</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>R720 v2 128 GB ⭐</td>
+          <td>2× E5 v2 10C, 128 GB DDR3, 8× SFF</td>
+          <td class="price">~330 €</td>
+          <td><a href="https://www.ebay.de/itm/145556305762" target="_blank">eBay</a></td>
+        </tr>
+        <tr>
+          <td>R720 v1 64 GB</td>
+          <td>2× E5-2630, 64 GB DDR3, 8× LFF</td>
+          <td class="price">~265 €</td>
+          <td><a href="https://www.ebay.de/itm/146073758962" target="_blank">eBay</a></td>
+        </tr>
+        <tr>
+          <td>R730 v3/v4 64 GB</td>
+          <td>2× E5-2667v3, 64 GB DDR4, 16× SFF</td>
+          <td class="price">~450–550 €</td>
+          <td><a href="https://www.ebay.de/itm/116290115494" target="_blank">eBay</a></td>
+        </tr>
+        <tr>
+          <td>Kleinanzeigen Berlin</td>
+          <td>varies — often 128 GB for 200–350 €</td>
+          <td class="price">200–350 €</td>
+          <td><a href="https://www.kleinanzeigen.de/s-pcs/dell-poweredge/k0c228" target="_blank">Kleinanzeigen</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer class="foot">
+    Homelab · Server Phase 2 · As of June 2026 · eBay prices fluctuate daily
+  </footer>
+</div>
+<script src="../../theme.js"></script>
+</body>
+</html>

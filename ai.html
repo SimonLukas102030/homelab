@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local AI — Homelab — IT Hub</title>
+  <script>(function(){try{var t=localStorage.getItem('it-hub-theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch{}})();</script>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="page.css" />
+  <style>:root{--accent:#3b82f6;--accent-rgb:59,130,246;}</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="topbar">
+    <a class="back" href="../../index.html">← Hub</a>
+    <span class="brand">IT · Homelab</span>
+    <button class="theme-toggle" type="button">☾</button>
+  </nav>
+
+  <nav class="subnav">
+    <a href="index.html">Overview</a>
+    <a href="einkaufsliste.html">Shopping List</a>
+    <a href="audio.html">Audio &amp; Multi-Room</a>
+    <a href="server.html">Server (Phase 2)</a>
+    <a href="networking.html">Networking</a>
+    <a href="operations.html">Operations</a>
+    <a href="ai.html" class="active">Local AI</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Local AI on the Homelab</h1>
+    <p class="lead">LLMs (Llama 3, Mistral, Qwen), image gen (Stable Diffusion, Flux), Speech-to-Text (Whisper) — all local, no OpenAI API. GPU options, performance expectations, setup with Ollama + Open WebUI. What 24 GB VRAM can actually do.</p>
+  </header>
+
+  <!-- ===== WHAT'S POSSIBLE ===== -->
+  <section class="section">
+    <h2><span class="num">01</span>What you can run locally</h2>
+
+    <div class="prose">
+      <p>With 24 GB VRAM (Tesla P40 or RTX 3090) you're in a comfortable class — you lose nothing compared to GPT-4o-mini or Claude Haiku for everyday tasks. Only the top frontier models (Claude Opus, GPT-5) remain cloud-only.</p>
+
+      <h3>LLMs (Text Generation)</h3>
+      <table class="tbl">
+        <thead>
+          <tr><th>Model</th><th>Quantization</th><th>VRAM</th><th>Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Llama 3 8B</td>           <td>Q4_K_M</td><td class="num">~5 GB</td><td>Fast, lightweight tasks, chat</td></tr>
+          <tr><td>Phi-4 14B</td>            <td>Q4_K_M</td><td class="num">~9 GB</td><td>Sweet spot — reasoning, code, fast</td></tr>
+          <tr><td>Qwen 2.5 14B</td>         <td>Q4_K_M</td><td class="num">~9 GB</td><td>Multilingual, very capable</td></tr>
+          <tr><td>Mistral Small 24B</td>    <td>Q4_K_M</td><td class="num">~14 GB</td><td>Strong in code &amp; logic</td></tr>
+          <tr><td>Llama 3 70B</td>          <td>Q4_K_M</td><td class="num">~40 GB</td><td>Just beyond 24 GB — splits to RAM (slower)</td></tr>
+          <tr><td>Qwen 2.5 Coder 32B</td>   <td>Q4_K_M</td><td class="num">~18 GB</td><td>Code specialist, near GPT-4o-mini level</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Image Generation</h3>
+      <table class="tbl">
+        <thead>
+          <tr><th>Model</th><th>VRAM</th><th>Speed (24 GB GPU)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stable Diffusion 1.5</td>  <td class="num">~4 GB</td><td>~1 s per image</td></tr>
+          <tr><td>SDXL</td>                  <td class="num">~10 GB</td><td>~5 s per image (P40), ~2 s (3090)</td></tr>
+          <tr><td>Flux.1 [dev]</td>          <td class="num">~22 GB</td><td>~30 s per image (P40), ~12 s (3090)</td></tr>
+          <tr><td>Flux.1 [schnell]</td>      <td class="num">~22 GB</td><td>4-step, ~8 s (P40), ~3 s (3090)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Speech &amp; Audio</h3>
+      <ul>
+        <li><strong>Whisper Large v3</strong> — Speech-to-Text, ~3 GB VRAM. 30 min audio in &lt; 1 min on 3090.</li>
+        <li><strong>Coqui TTS / Piper</strong> — Text-to-Speech, &lt; 1 GB VRAM, also runs on CPU.</li>
+        <li><strong>RVC / so-vits-svc</strong> — Voice cloning, ~6 GB VRAM training, &lt; 2 GB inference.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== GPU OPTIONS ===== -->
+  <section class="section">
+    <h2><span class="num">02</span>GPU Options — direct comparison</h2>
+
+    <div class="prose">
+      <table class="tbl">
+        <thead>
+          <tr><th>GPU</th><th>VRAM</th><th>Used Price</th><th>LLM Speed</th><th>SDXL Speed</th><th>TDP</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tesla P40</strong></td>
+            <td class="num">24 GB GDDR5</td>
+            <td class="num">~€220</td>
+            <td class="num">23 t/s 8B · 6 t/s 70B</td>
+            <td class="num">~5 s</td>
+            <td class="num">250 W</td>
+            <td>Best €/GB VRAM. Cooling mod required.</td>
+          </tr>
+          <tr>
+            <td><strong>RTX 3060 12 GB</strong></td>
+            <td class="num">12 GB GDDR6</td>
+            <td class="num">~€220</td>
+            <td class="num">35 t/s 8B · — (no 70B)</td>
+            <td class="num">~3 s</td>
+            <td class="num">170 W</td>
+            <td>Quiet, gaming-capable. Limited to 14B models.</td>
+          </tr>
+          <tr>
+            <td><strong>RTX 3090 24 GB</strong></td>
+            <td class="num">24 GB GDDR6X</td>
+            <td class="num">~€650</td>
+            <td class="num">70 t/s 8B · 18 t/s 70B</td>
+            <td class="num">~2 s</td>
+            <td class="num">350 W</td>
+            <td>Sweet-spot performance. Gaming-capable.</td>
+          </tr>
+          <tr>
+            <td><strong>RTX 4090 24 GB</strong></td>
+            <td class="num">24 GB GDDR6X</td>
+            <td class="num">~€1.500 used</td>
+            <td class="num">110 t/s 8B · 28 t/s 70B</td>
+            <td class="num">~1 s</td>
+            <td class="num">450 W</td>
+            <td>Top speed, top price.</td>
+          </tr>
+          <tr>
+            <td><strong>2× Tesla P40</strong></td>
+            <td class="num">48 GB total</td>
+            <td class="num">~€440</td>
+            <td class="num">10 t/s 70B (Q8!)</td>
+            <td class="num">~5 s</td>
+            <td class="num">500 W total</td>
+            <td>Q8-quality 70B possible. 2 slots in the server.</td>
+          </tr>
+          <tr>
+            <td><strong>AMD MI50 32 GB</strong></td>
+            <td class="num">32 GB HBM2</td>
+            <td class="num">~€350</td>
+            <td class="num">~12 t/s 8B</td>
+            <td class="num">~10 s</td>
+            <td class="num">300 W</td>
+            <td>ROCm instead of CUDA — lots of friction.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <span class="icon">💡</span>
+        <div class="body"><strong>Why Tesla P40 for the Medium tier:</strong> Best €/GB VRAM ratio on the market. €9 per GB VRAM (vs. RTX 3090 at €27/GB). Pascal architecture is slower per FLOP, but sufficient for LLM inference — especially since VRAM size matters more than speed (does the model fit? yes → usable). Cooling mod is standard, ~€20.</div>
+      </div>
+
+      <div class="callout info">
+        <span class="icon">💡</span>
+        <div class="body"><strong>Why RTX 3090 for the Pro tier:</strong> 3× faster than P40 in inference, 5–10× faster in SDXL/Flux. Plus: can double as a gaming card via Parsec/Sunshine. If you're serious about local AI, you eventually want FP16-capable hardware — the 3090 is the last card that will be supported for a long time.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SETUP ===== -->
+  <section class="section">
+    <h2><span class="num">03</span>Setup — Ollama + Open WebUI</h2>
+
+    <div class="prose">
+      <p>Recommended stack: <strong>Ollama</strong> as the inference engine (auto GPU detection, model management via CLI) + <strong>Open WebUI</strong> as the frontend (ChatGPT-style UI, multi-user capable).</p>
+
+      <h3>Architecture</h3>
+      <div class="diagram"><span class="hi">VM 110</span>  ai-server (Ubuntu 24.04, GPU passthrough)
+│
+├── ollama          (port 11434, OpenAI-compatible API)
+├── open-webui      (port 3000, Web UI)
+└── n8n / SillyTavern / etc. (optional, per Docker)
+
+GPU Passthrough: PCIe bus &lt;Tesla P40 or RTX 3090&gt; → VM 110
+
+Model Storage: <span class="hi">/var/lib/ollama/models</span>  (~50 GB for 5–6 models)</div>
+
+      <h3>Installation</h3>
+      <ol class="steps">
+        <li><strong>Proxmox: enable GPU passthrough</strong> — enable IOMMU in BIOS, register <code>vfio_pci</code> for the GPU vendor IDs. Details below.</li>
+        <li><strong>Create VM</strong>: Ubuntu 24.04 Server, 8 vCores, 16 GB RAM, pass GPU through as PCI device. Boot order: virtio-disk first.</li>
+        <li><strong>NVIDIA drivers in guest</strong>: <code>sudo apt install nvidia-driver-550 nvidia-utils-550</code>. <code>nvidia-smi</code> must show the card.</li>
+        <li><strong>Install Ollama</strong>: <code>curl -fsSL https://ollama.com/install.sh | sh</code>. Auto-detects the GPU via nvidia-smi.</li>
+        <li><strong>First model</strong>: <code>ollama pull llama3.1:8b</code>. Then <code>ollama run llama3.1:8b</code> for a chat test.</li>
+        <li><strong>Open WebUI</strong> via Docker: <code>docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main</code>.</li>
+        <li><strong>NPM</strong> (see Software page) → <code>ai.simonsstudios.de</code> → 192.168.20.110:3000.</li>
+      </ol>
+
+      <h3>GPU Passthrough (Proxmox host)</h3>
+      <pre><code># 1. IOMMU in kernel
+echo "intel_iommu=on iommu=pt" &gt;&gt; /etc/default/grub
+# (for AMD: amd_iommu=on iommu=pt)
+update-grub
+
+# 2. VFIO modules
+echo "vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd" &gt;&gt; /etc/modules
+
+# 3. Find GPU IDs
+lspci -nnv | grep -i nvidia
+# Result: 03:00.0 ... [10de:1b06]
+#         03:00.1 ... [10de:10f0]  (GPU audio component)
+
+# 4. Bind VFIO to the IDs
+echo "options vfio-pci ids=10de:1b06,10de:10f0" \
+  &gt; /etc/modprobe.d/vfio.conf
+
+# 5. Blacklist NVIDIA driver on host
+echo "blacklist nouveau
+blacklist nvidia
+blacklist nvidiafb" &gt; /etc/modprobe.d/blacklist-nvidia.conf
+
+# 6. Reboot
+update-initramfs -u
+reboot
+
+# 7. Verify
+dmesg | grep -i vfio
+# Expected: vfio-pci bound to GPU</code></pre>
+
+      <p>In the Proxmox web UI: VM → Hardware → Add → PCI Device → select the GPU, check "All Functions" + "PCI-Express".</p>
+
+      <h3>Open WebUI — Highlights</h3>
+      <ul>
+        <li><strong>Multi-model support</strong> — switch between Llama, Phi-4, Qwen via dropdown</li>
+        <li><strong>RAG (Retrieval-Augmented Generation)</strong> — upload files, chat with them</li>
+        <li><strong>Code interpreter</strong> with Python sandbox</li>
+        <li><strong>Voice chat</strong> via Whisper + Piper TTS</li>
+        <li><strong>Image gen integration</strong> — if you run AUTOMATIC1111 or ComfyUI alongside</li>
+        <li><strong>Conversation branching</strong> like Anthropic Claude</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== ADDITIONAL WORKLOADS ===== -->
+  <section class="section">
+    <h2><span class="num">04</span>Additional Workloads</h2>
+
+    <div class="comp">
+      <h3>Stable Diffusion / SDXL — AUTOMATIC1111 or ComfyUI</h3>
+      <p class="why">SDXL is the go-to for local image generation. <strong>AUTOMATIC1111</strong> is the classic UI with a plugin ecosystem (ControlNet, LoRAs). <strong>ComfyUI</strong> is node-based (workflow programming) — more modern, Flux-capable, but steeper learning curve. Both run in the same AI VM, port 7860 (A1111) or 8188 (Comfy).</p>
+    </div>
+
+    <div class="comp">
+      <h3>Whisper — automatic subtitles</h3>
+      <p class="why"><code>whisper.cpp</code> on the GPU, Speech-to-Text for your Plex library — auto-generates subtitles for all movies and series. Run pattern: cron job, all new files in /mnt/media get subtitled overnight.</p>
+    </div>
+
+    <div class="comp">
+      <h3>n8n — AI automation</h3>
+      <p class="why">Self-hosted Zapier alternative. Drag-and-drop workflows: "When new email in inbox → summarize with Llama → post to Discord webhook". With a local LLM endpoint (<code>http://ollama:11434</code>) the entire AI logic runs on-prem.</p>
+    </div>
+
+    <div class="comp">
+      <h3>Coding Assistant — Continue.dev / Cody</h3>
+      <p class="why">VS Code plugin <code>Continue.dev</code> connects to your local Ollama endpoint. You get local code completion with Qwen 2.5 Coder 32B (fits in 24 GB) — near GPT-4o-level coding without API costs. <strong>Privacy advantage:</strong> no code leaves your network.</p>
+    </div>
+  </section>
+
+  <!-- ===== PERFORMANCE TIPS ===== -->
+  <section class="section">
+    <h2><span class="num">05</span>Performance Tips</h2>
+
+    <div class="prose">
+      <ul>
+        <li><strong>Choose quantization:</strong> Q4_K_M is the default recommendation — best quality-to-VRAM ratio. Q5_K_M if you have VRAM headroom, Q3 only when absolutely necessary (quality degrades noticeably).</li>
+        <li><strong>Context size:</strong> don't set it to the maximum — 8K context in Llama 3 is enough for 99% of chat tasks. 32K context consumes extra VRAM and is often slower.</li>
+        <li><strong>Batch size:</strong> set in Ollama via <code>num_batch</code>. Default 512 is fine. Lower to 128 if VRAM is tight.</li>
+        <li><strong>Flash Attention</strong> (supported on RTX 30/40, not P40): <code>OLLAMA_FLASH_ATTENTION=1</code> saves 20–40% VRAM on long context.</li>
+        <li><strong>KV cache quantization</strong>: <code>OLLAMA_KV_CACHE_TYPE=q8_0</code> halves KV cache memory. Helps with large contexts.</li>
+        <li><strong>Model selection per task:</strong> Phi-4 14B for fast responses, Qwen 2.5 32B Coder for programming, Llama 70B-Q4 for deep reasoning. Switchable via dropdown in Open WebUI.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== COST COMPARISON ===== -->
+  <section class="section">
+    <h2><span class="num">06</span>Cost Comparison vs. Cloud API</h2>
+
+    <div class="prose">
+      <p>Is local AI worth it compared to the OpenAI/Anthropic API? Quick math:</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>Scenario</th><th>Local (Medium build)</th><th>Cloud (GPT-4o-mini, ~$0.15/1M input + $0.60/1M output)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Casual chat (1k tokens/day)</td>
+            <td class="num">~€0/day</td>
+            <td class="num">~$0.0008/day</td>
+          </tr>
+          <tr>
+            <td>Heavy coding (50k tokens/day)</td>
+            <td class="num">~€0/day (+electricity)</td>
+            <td class="num">~$0.04/day = $1.20/month</td>
+          </tr>
+          <tr>
+            <td>Massive (500k tokens/day, pipelines)</td>
+            <td class="num">~€0/day</td>
+            <td class="num">~$0.40/day = $12/month</td>
+          </tr>
+          <tr>
+            <td>Image gen (50/day SDXL)</td>
+            <td class="num">~€0</td>
+            <td class="num">DALL-E: $0.04/img × 50 = $2/day</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <span class="icon">⚠</span>
+        <div class="body"><strong>Reality check:</strong> Cloud APIs are dirt cheap for casual use. Your local AI setup will <strong>not</strong> pay off financially against GPT-4o-mini if you only do chat. <strong>Worth it for:</strong> privacy (your data stays local), unlimited usage without rate limits, custom fine-tunes, bulk image gen, RAG over large datasets, or simply because it's cool.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="index.html">← Back to Overview</a>
+  </footer>
+</div>
+
+<script src="../../theme.js"></script>
+</body>
+</html>
