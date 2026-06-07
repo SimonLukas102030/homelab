@@ -83,18 +83,9 @@
     <!-- 4 — Switch + WAP -->
     <div class="comp">
       <h3>4 · TP-Link TL-SG2210P (rack switch, 8× PoE) + TL-SG108 (living room) <span class="price-tag">~98 + 15 €</span></h3>
-      <div class="why">TL-SG2210P: 8× PoE+ Gbit + 2× SFP, 1U rack-native (rack ears included), managed. Powers EAP670 WAP via PoE. Updated price: ~€98 on Geizhals (June 2026). TL-SG108: unmanaged 8-port for living room (TV + Apple + Sony LR).</div>
+      <div class="why">TL-SG2210P: 8× PoE+ Gbit + 2× SFP, 1U rack-native (rack ears included), managed. PoE ports ready for WAP in Phase 2. Updated price: ~€98 on Geizhals (June 2026). TL-SG108: unmanaged 8-port for living room (TV + Apple + Sony LR).</div>
       <div class="alt">
         <strong>TL-SG2210P:</strong> <a href="https://geizhals.de/tp-link-tl-sg2210p-a1156121.html" target="_blank">Geizhals ~€98</a> &nbsp;|&nbsp; <strong>TL-SG108:</strong> Amazon ~€15
-      </div>
-    </div>
-
-    <!-- 4b — WAP -->
-    <div class="comp">
-      <h3>4b · TP-Link EAP670 WAP (WiFi 6, PoE) <span class="price-tag">~80 €</span></h3>
-      <div class="why">WiFi 6 AX3000, PoE-powered from TL-SG2210P (no PSU, one cable), Omada Controller runs free on Proxmox/Pi as Docker container. Wall or ceiling mount for best coverage.</div>
-      <div class="alt">
-        <strong>Amazon / Geizhals:</strong> TP-Link EAP670 ~€80 &nbsp;|&nbsp; Budget: EAP615 (~€50, WiFi 6 AX1800)
       </div>
     </div>
 
@@ -211,7 +202,7 @@
         <tr><td>3alt</td><td>— Fallback: X1204USB used + shelf</td><td>Kleinanzeigen</td><td class="price">~100–130 €</td><td style="color:#818cf8;font-size:12px;">fallback</td></tr>
         <tr><td>4</td><td>TP-Link TL-SG2210P (rack, PoE) — €98 Geizhals</td><td>Geizhals</td><td class="price">~98 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>4b</td><td>TP-Link TL-SG108 (living room)</td><td>Amazon</td><td class="price">~15 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr><td>4c</td><td>TP-Link EAP670 WAP (WiFi 6, PoE)</td><td>Amazon</td><td class="price">~80 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
+        <tr><td>4c</td><td>TP-Link EAP670 WAP (WiFi 6, PoE)</td><td>Amazon</td><td class="price">~80 €</td><td style="color:#818cf8;font-size:12px;">Phase 2</td></tr>
         <tr><td>5a</td><td>2U blank panel (Adam Hall 87222STL)</td><td>Thomann</td><td class="price">~6 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
         <tr><td>5b</td><td>HDMI 4×1 switch PCB (4 buttons, 4K60)</td><td>Amazon</td><td class="price">~25 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>5c</td><td>HDMI panel-mount bulkhead × 5</td><td>Amazon</td><td class="price">~12 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
@@ -234,8 +225,8 @@
         <tr><td>9</td><td>DIY side panels (plywood + pegboard + hooks + plants)</td><td>Baumarkt + Amazon</td><td class="price">~45–65 €</td><td style="color:#818cf8;font-size:12px;">after rack arrives</td></tr>
         <tr><td>10</td><td>Audio cables (3.5mm→Cinch, XLR→RCA, TOSLINK)</td><td>Amazon / Thomann</td><td class="price">~32 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>11</td><td>Broadlink RM4 mini × 2</td><td>Amazon</td><td class="price">~40 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr class="total"><td colspan="3">Phase 1 total (without rack, with XR18)</td><td class="price">~870–960 €</td><td></td></tr>
-        <tr class="total"><td colspan="3">Phase 1 total (without rack, X1204USB fallback)</td><td class="price">~640–710 €</td><td></td></tr>
+        <tr class="total"><td colspan="3">Phase 1 total (without rack, with XR18)</td><td class="price">~790–880 €</td><td></td></tr>
+        <tr class="total"><td colspan="3">Phase 1 total (without rack, X1204USB fallback)</td><td class="price">~560–630 €</td><td></td></tr>
         <tr class="total"><td colspan="3">Rack (parents, used)</td><td class="price">~200–350 €</td><td></td></tr>
       </tbody>
     </table>
@@ -248,6 +239,12 @@
     <div class="callout warn">
       <div class="icon">⏳</div>
       <div class="body"><strong>Timing:</strong> Summer job 2026 (2 weeks × 40 h), then ~10 h/week after school. Buy PowerEdge when budget is secured. Rack is already planned for ≥100 cm depth — PowerEdge fits without swapping the rack.</div>
+    </div>
+
+    <div class="comp">
+      <h3>TP-Link EAP670 WAP (WiFi 6, PoE) <span class="price-tag">~80 €</span></h3>
+      <div class="why">WiFi 6 AX3000, PoE-powered from TL-SG2210P (no separate PSU, one cable). Router is close enough for now — add when coverage becomes an issue. Omada Controller runs on Pi/Proxmox as Docker container.</div>
+      <div class="alt"><strong>Amazon / Geizhals:</strong> TP-Link EAP670 ~€80 &nbsp;|&nbsp; Budget: EAP615 (~€50, WiFi 6 AX1800)</div>
     </div>
 
     <div class="comp">
