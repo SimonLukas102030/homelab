@@ -70,37 +70,38 @@
 
   <!-- ===== RACK LAYOUT ===== -->
   <section class="section">
-    <h2><span class="num">RACK</span>Slot Plan — 36U (U1–U20 active, U21–U36 reserve)</h2>
+    <h2><span class="num">RACK</span>Slot Plan — 36U (U1–U21 active, U22–U36 reserve)</h2>
     <div class="diagram">
 <span class="hi">╔═══════════════════════════════════════════════════════╗</span>
 <span class="hi">║  Brother DCP-L2620DW (printer — on top of rack)      ║  ← flat top surface, 6.3 kg, accessible at ~145 cm</span>
 <span class="hi">╠═════╦═════════════════════════════════════════════════╣</span>
 <span class="hi">║  U1 ║</span> Horizontal Cable Management (top)              ║  ← brush-strip, top entry
 <span class="hi">║  U2 ║</span> Patch Panel 24-port (optional)                  ║  ← clean termination for Cat6 runs
-<span class="hi">║  U3 ║</span> DIY Custom Panel 1U                             ║  ← [USB-A][USB-A][USB-C] [HDMI IN] [1][2][3][4] HDMI select → Command Wall reels
-<span class="hi">║  U4 ║</span> TP-Link TL-SG2210P (1U rack-native, 8× PoE)    ║  ← rack ears included, all ports rear
-<span class="hi">║  U5 ║</span> Behringer XR18 (1U rack-native, WiFi)           ║  ← 18ch digital mixer, all 18 ports rear
-<span class="hi">║  U6 ║</span> Rack PDU 1U (8× Schuko)                         ║  ← powers all rack devices
+<span class="hi">║  U3 ║</span>                                                  ║  ↑ DIY Custom Panel 2U
+<span class="hi">║  U4 ║</span> DIY Custom Panel 2U                              ║  ← HDMI | OptiPlex | Gaming PC | Charge | Phones | Mic In | Power
+<span class="hi">║  U5 ║</span> TP-Link TL-SG2210P (1U rack-native, 8× PoE)    ║  ← rack ears included, all ports rear
+<span class="hi">║  U6 ║</span> Behringer XR18 (1U rack-native, WiFi)           ║  ← 18ch digital mixer, all 18 ports rear
+<span class="hi">║  U7 ║</span> Rack PDU 1U (8× Schuko)                         ║  ← powers all rack devices
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U7  ║</span>                                                  ║  ↑ Sony STR-DB790 (145 mm = 3U clearance + 1U shelf)
-<span class="hi">║ U8  ║</span> Sony STR-DB790 (on shelf at U10)                 ║  ← all I/O rear, no rack-ear conversion
-<span class="hi">║ U9  ║</span>                                                  ║  ↓ shelf bracket at U10
-<span class="hi">║ U10 ║</span> 1U Shelf (Sony)                                  ║
+<span class="hi">║  U8 ║</span>                                                  ║  ↑ Sony STR-DB790 (145 mm = 3U clearance + 1U shelf)
+<span class="hi">║  U9 ║</span> Sony STR-DB790 (on shelf at U11)                 ║  ← all I/O rear, no rack-ear conversion
+<span class="hi">║ U10 ║</span>                                                  ║  ↓ shelf bracket at U11
+<span class="hi">║ U11 ║</span> 1U Shelf (Sony)                                  ║
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U11 ║</span>                                                  ║  ↑ OptiPlex SFF on side (100 mm = ~2U clearance)
-<span class="hi">║ U12 ║</span> OptiPlex 7020 SFF + Pi 4 + 10.1" Display         ║  ← display overlaps blank ~13 cm face, ~40 cm total width
-<span class="hi">║ U13 ║</span> 1U Shelf (OptiPlex + Pi)                         ║  ← shelf bracket
+<span class="hi">║ U12 ║</span>                                                  ║  ↑ OptiPlex SFF on side (100 mm = ~2U clearance)
+<span class="hi">║ U13 ║</span> OptiPlex 7020 SFF + Pi 4 + 10.1" Display         ║  ← display overlaps blank ~13 cm face, ~40 cm total width
+<span class="hi">║ U14 ║</span> 1U Shelf (OptiPlex + Pi)                         ║  ← shelf bracket
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U14 ║</span>                                                  ║
-<span class="hi">║ U15 ║</span> ░░░░░░░░░ RESERVE ░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║
+<span class="hi">║ U15 ║</span>                                                  ║
+<span class="hi">║ U16 ║</span> ░░░░░░░░░ RESERVE ░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U16 ║</span>                                                  ║  Phase 2 ↓
-<span class="hi">║ U17 ║</span> Dell PowerEdge R720 (Phase 2, 2U)               ║  ← ~72 cm deep → needs ≥100 cm rack
+<span class="hi">║ U17 ║</span>                                                  ║  Phase 2 ↓
+<span class="hi">║ U18 ║</span> Dell PowerEdge R720 (Phase 2, 2U)               ║  ← ~72 cm deep → needs ≥100 cm rack
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U18 ║</span>                                                  ║
-<span class="hi">║ U19 ║</span> APC Smart-UPS 750RM (Phase 2, 2U)               ║  ← holds R720 for ~5–8 min on battery
+<span class="hi">║ U19 ║</span>                                                  ║
+<span class="hi">║ U20 ║</span> APC Smart-UPS 750RM (Phase 2, 2U)               ║  ← holds R720 for ~5–8 min on battery
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U20 ║</span> Horizontal Cable Management (bottom)             ║  ← mains cable entry from PDU
+<span class="hi">║ U21 ║</span> Horizontal Cable Management (bottom)             ║  ← mains cable entry from PDU
 <span class="hi">╚═════╩═════════════════════════════════════════════════╝</span>
     </div>
     <div class="callout info">
@@ -111,40 +112,52 @@
 
   <!-- ===== DIY PANEL ===== -->
   <section class="section">
-    <h2><span class="num">PANEL</span>DIY Custom Panel — U3</h2>
-    <p style="color:var(--text-muted); margin-bottom:16px;">1U blank panel is the central interface between rack internals and the desk. Built by hand — the HDMI switch PCB is stripped from its housing, mounted inside the 1U panel, and its 4 selection buttons exposed through cutouts in the panel face.</p>
+    <h2><span class="num">PANEL</span>DIY Custom Panel — U3–U4 (2U)</h2>
+    <p style="color:var(--text-muted); margin-bottom:16px;">2U blank panel (89 mm tall, ~447 mm usable face width). Seven labeled zones cover all front-accessible I/O: HDMI switching, USB to both PCs, charging-only USB, headphone out to XR18, two combo XLR/TRS mic inputs, and two Schuko convenience outlets. HDMI switch PCB and USB hubs live inside; all rear cables exit through the back.</p>
 
-    <div class="twocol">
+    <h3 style="font-size:15px;font-weight:700;margin:0 0 10px;">Front face — zones (left → right)</h3>
+    <div class="diagram" style="font-size:11px; overflow-x:auto; padding:14px 16px; line-height:1.65;">
+<span class="hi">┌─────────────────────┬─────────────────┬───────────────────────────┬──────────────┬──────────┬───────────────────────┬─────────────┐</span>
+<span class="hi">│        HDMI         │    OptiPlex     │         Gaming PC          │    Charge    │  Phones  │        Mic In         │    Power    │</span>
+<span class="hi">├─────────────────────┼─────────────────┼───────────────────────────┼──────────────┼──────────┼───────────────────────┼─────────────┤</span>
+│                     │  [A]  [A]       │  [A]  [A]  [C]            │  [A]  [A]    │          │  [XLR]      [XLR]     │             │
+│  [▶] [1] [2] [3] [4]│     [C]         │  [A]  [A]  [C]            │  [C]  [C]    │  [3.5mm] │  PC·Mic     XR18·Ch   │  [~]  [~]   │
+<span class="hi">└─────────────────────┴─────────────────┴───────────────────────────┴──────────────┴──────────┴───────────────────────┴─────────────┘</span>
+<span class="dim"> IN + 4× select       2A+1C→OptiPlex   4A+2C→Gaming PC (2 rows)   2A+2C no data  →XR18 HP   XLR or TRS jack (both)   Schuko→PDU  </span>
+    </div>
+
+    <div class="twocol" style="margin-top:20px;">
       <div>
-        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">Front face layout</h3>
-        <div class="diagram" style="font-size:12px; padding:14px 16px;">
-<span class="hi">┌─────────────────────────────────────────────────────────┐</span>
-<span class="hi">│ [USB-A] [USB-A] [USB-C] │ [HDMI ▶] │ [1] [2] [3] [4] │ ≈≈≈≈≈ │</span>
-<span class="hi">└─────────────────────────────────────────────────────────┘</span>
-        ← USB hub               ← HDMI IN       ← select    ← cable reels
-        </div>
-        <dl class="kv" style="margin-top:12px; font-size:13px;">
-          <dt>USB section</dt><dd>Internal USB hub → 2× USB-A + 1× USB-C on front. Charges and passes data to PC. Cable reels (Command Wall) connect here.</dd>
-          <dt>HDMI IN socket</dt><dd>Front-panel HDMI female (Input 1 of switch) — quick connect for laptop, console, camera.</dd>
-          <dt>Select buttons [1][2][3][4]</dt><dd>HDMI switch PCB mounted inside, 4 buttons drilled through panel face. LED per port shows active input.</dd>
-          <dt>Cable reels slot</dt><dd>Fasgear retractable USB-C reels pass through slots to Command Wall exterior.</dd>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">Zone details</h3>
+        <dl class="kv" style="font-size:13px;">
+          <dt>HDMI</dt><dd>1× HDMI-A female (front IN, Input 1) + 4 select buttons [1–4] drilled through panel face. Switch PCB mounted inside, LED per port. Inputs 2–4: rear pigtails to OptiPlex / Pi / spare.</dd>
+          <dt>OptiPlex</dt><dd>2× USB-A + 1× USB-C front sockets → internal USB hub → 1 cable rear → OptiPlex 7020 back USB port.</dd>
+          <dt>Gaming PC</dt><dd>4× USB-A + 2× USB-C (two rows, 6 ports total) → internal USB hub → 1 cable rear → Gaming PC back USB port.</dd>
+          <dt>Charge</dt><dd>2× USB-A + 2× USB-C → USB wall charger inside (e.g. Anker 65W 6-port). Power only, no data lines. Useful for phones, tablets, headsets.</dd>
+          <dt>Phones</dt><dd>1× 3.5mm TRS female → internal pigtail (3.5mm ♂ → 6.35mm ♂, ~0.3m) → XR18 headphone out (rear of XR18). One 6.35mm adapter clipped to panel face for full-size headphones.</dd>
+          <dt>Mic In</dt><dd>2× Neutrik-style XLR/TRS combo jack. <em>PC·Mic</em>: rear pigtail → PC audio in (mic). <em>XR18·Ch</em>: rear pigtail → XR18 channel 1 or 2 input. Both accept XLR mic or 6.35mm TRS instrument cable.</dd>
+          <dt>Power</dt><dd>2× Schuko panel-mount socket (~45×45mm cutout per socket) → internal wiring → PDU (U7). 10A max per socket. Front-accessible convenience outlets — useful for charging bricks, desk lamps, etc.</dd>
         </dl>
       </div>
       <div>
-        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">Internal wiring</h3>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;">HDMI wiring</h3>
         <table class="tbl" style="font-size:12px;">
-          <thead><tr><th>HDMI Port</th><th>Connected to</th><th>Type</th></tr></thead>
+          <thead><tr><th>Port</th><th>Connected to</th><th>Cable</th></tr></thead>
           <tbody>
-            <tr><td>Input 1</td><td>Front panel HDMI socket</td><td>quick connect</td></tr>
-            <tr><td>Input 2</td><td>OptiPlex HDMI out</td><td>rear pigtail 0.5m</td></tr>
-            <tr><td>Input 3</td><td>Raspberry Pi mini-HDMI</td><td>rear pigtail 0.5m</td></tr>
-            <tr><td>Input 4</td><td>Spare (console, capture card)</td><td>rear pigtail 0.5m</td></tr>
-            <tr><td><strong>Output</strong></td><td><strong>G9 HDMI port</strong></td><td>2.5m to desk</td></tr>
+            <tr><td>Input 1</td><td>Front HDMI socket (panel face)</td><td>quick connect</td></tr>
+            <tr><td>Input 2</td><td>OptiPlex HDMI out</td><td>0.5m pigtail rear</td></tr>
+            <tr><td>Input 3</td><td>Raspberry Pi mini-HDMI</td><td>0.5m pigtail rear</td></tr>
+            <tr><td>Input 4</td><td>Spare (console / capture card)</td><td>0.5m pigtail rear</td></tr>
+            <tr><td><strong>Output</strong></td><td><strong>G9 HDMI port (desk)</strong></td><td>2.5m rear → desk</td></tr>
           </tbody>
         </table>
         <div class="callout ok" style="margin-top:12px;">
           <div class="icon">✓</div>
-          <div class="body">Gaming PC uses DisplayPort → G9 directly (primary display connection). HDMI switch feeds G9's only remaining HDMI port. Total display inputs: 1 DP (PC direct) + 4 HDMI (via switch). Full 4K60 Hz on HDMI 2.0.</div>
+          <div class="body">Gaming PC uses DisplayPort → G9 directly (primary). HDMI switch covers G9's remaining HDMI port. 1× DP + 4× HDMI = full 4K60 on HDMI 2.0 — no monitor input wasted.</div>
+        </div>
+        <div class="callout info" style="margin-top:12px;">
+          <div class="icon">🔧</div>
+          <div class="body"><strong>Build notes:</strong> 2U blank (e.g. Adam Hall 87222STL or similar steel blank). Mill/drill cutouts per zone. HDMI switch PCB and USB hubs hot-glued or bracket-mounted inside. Schuko cutout ~45×45mm each — use flush-mount socket (e.g. Kaiser 1218). XLR combo jacks 24mm drill hole (Neutrik NCJ6FI-S or similar). All rear exits through panel flanges or cable gland.</div>
         </div>
       </div>
     </div>
@@ -184,14 +197,16 @@
     </div>
 
     <div class="comp">
-      <h3>DIY Custom Panel 1U (USB + HDMI + 4×1 switch) <span class="price-tag">~75–90 €</span></h3>
-      <div class="why">1U blank panel (Adam Hall 87221STL). USB hub inside → USB-A/C on front. HDMI 4×1 switch PCB inside → front socket + 3 rear pigtails as inputs, 1 output pigtail to G9. 4 selection buttons drilled through panel face. See DIY Panel section above for full wiring diagram.</div>
-      <div class="alt"><strong>Adam Hall blank:</strong> <a href="https://www.thomann.de/de/adam_hall_87221stl_urackblende_1_he.htm" target="_blank">thomann.de ~€4</a> &nbsp;|&nbsp; <strong>HDMI 4×1 switch:</strong> Amazon ~€25 &nbsp;|&nbsp; full parts breakdown on Shopping List page</div>
+      <h3>DIY Custom Panel 2U (7 zones: HDMI · USB · Phones · Mic · Power) <span class="price-tag">~110–140 €</span></h3>
+      <div class="why">2U blank panel (U3–U4, 89mm height). <strong>HDMI zone:</strong> 4×1 switch PCB inside, front IN socket + 4 select buttons, 3 rear input pigtails, 1 output to G9. <strong>OptiPlex zone:</strong> 2×USB-A + 1×USB-C → USB hub → OptiPlex. <strong>Gaming PC zone:</strong> 4×USB-A + 2×USB-C (2 rows) → USB hub → Gaming PC. <strong>Charge zone:</strong> 2×USB-A + 2×USB-C → USB charger (no data). <strong>Phones zone:</strong> 3.5mm TRS → pigtail → XR18 HP out; 6.35mm adapter clipped on. <strong>Mic In zone:</strong> 2× Neutrik XLR/TRS combo jacks — one → PC mic in, one → XR18 channel. <strong>Power zone:</strong> 2× Schuko flush-mount → PDU. See DIY Panel section above for full diagram.</div>
+      <div class="alt">
+        <strong>2U blank (Adam Hall 87222STL):</strong> thomann.de ~€6 &nbsp;|&nbsp; <strong>HDMI 4×1 switch PCB:</strong> Amazon ~€25 &nbsp;|&nbsp; <strong>USB hubs × 2 (OptiPlex + PC):</strong> Amazon ~€15 each &nbsp;|&nbsp; <strong>USB 65W charger:</strong> Amazon ~€20 &nbsp;|&nbsp; <strong>Neutrik XLR/TRS combo × 2 (NCJ6FI-S):</strong> Thomann ~€6 each &nbsp;|&nbsp; <strong>Schuko flush-mount × 2 (Kaiser 1218):</strong> Amazon/Conrad ~€8 each &nbsp;|&nbsp; full parts breakdown on Shopping List page
+      </div>
     </div>
 
     <div class="comp">
       <h3>Rack PDU 1U (8× Schuko) <span class="price-tag">~40–55 €</span></h3>
-      <div class="why">1U rack-mount power strip at U6. Powers XR18, Sony, OptiPlex, switch, Pi, panel. Surge protection + circuit breaker. Mains cable runs along bottom of rack from U20 cable management.</div>
+      <div class="why">1U rack-mount power strip at U7. Powers XR18, Sony, OptiPlex, switch, Pi, panel (including Schuko outlets on DIY panel face). Surge protection + circuit breaker. Mains cable runs along bottom of rack from U21 cable management.</div>
       <div class="alt"><strong>Amazon:</strong> search "PDU 1U 19 Zoll 8 Schuko" ~€40–55 &nbsp;|&nbsp; <a href="https://www.reichelt.de/de/de/shop/search/?SEARCH=PDU+1U+19" target="_blank">Reichelt PDU 19" 1HE</a></div>
     </div>
 
@@ -203,7 +218,7 @@
 
     <div class="comp" style="border-left: 3px solid var(--accent); padding-left: 16px;">
       <h3>DIY Side Panels — Plywood (left) + Pegboard (right) <span class="price-tag">~45–65 €</span></h3>
-      <div class="why">Both panels bolt to the open frame rack posts via M6 cage nuts — no welding, no drilling the rack. Left: 12mm birch plywood panel, natural wood grain, pothos plant on top (vines cascade down). Right: black powder-coated metal pegboard (Command Wall facing the desk) — retractable USB-C cable reels thread through to DIY Panel U3, hooks for remotes (G9, Sony, LED), controllers, tools.</div>
+      <div class="why">Both panels bolt to the open frame rack posts via M6 cage nuts — no welding, no drilling the rack. Left: 12mm birch plywood panel, natural wood grain, pothos plant on top (vines cascade down). Right: black powder-coated metal pegboard (Command Wall facing the desk) — retractable USB-C cable reels thread through to DIY Panel U3–U4, hooks for remotes (G9, Sony, LED), controllers, tools.</div>
       <div class="alt">
         <strong>Birch plywood 12mm:</strong> OBI/Baumarkt, custom cut ~40×120 cm ~€15–20<br>
         <strong>Black metal pegboard 40×120 cm:</strong> OBI/Baumarkt ~€10–15<br>

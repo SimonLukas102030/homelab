@@ -100,34 +100,38 @@
 
     <!-- 5 — DIY Panel -->
     <div class="comp" style="border-left: 3px solid #6366f1; padding-left: 16px;">
-      <h3>5 · DIY Custom Panel 1U — USB + HDMI + 4×1 Switch <span class="price-tag">~75–90 €</span></h3>
+      <h3>5 · DIY Custom Panel 2U — 7 Zones (HDMI · USB · Phones · Mic · Power) <span class="price-tag">~110–140 €</span></h3>
       <div class="why">
-        The 1U panel is the central patch point between rack and desk. Front face (left to right):
-        <code style="display:block;margin:8px 0;padding:8px;background:var(--surface-2);border-radius:6px;font-size:12px;">[USB-A] [USB-A] [USB-C]  │  [HDMI IN quick]  │  [1] [2] [3] [4] HDMI select  │  Cable reels →</code>
-        <strong>USB section:</strong> USB hub inside panel → 2× USB-A + 1× USB-C on front. Powers and passes data. Cable reels (Command Wall) connect here. <br>
-        <strong>HDMI 4×1 switch section:</strong> Gaming PC uses DisplayPort → G9 directly (main connection). The G9's single remaining HDMI port gets fed from this switch's output. 4 inputs:<br>
-        — Input 1: Front-panel HDMI socket (quick connect anything at rack front) <br>
-        — Input 2: Rear pigtail → OptiPlex HDMI<br>
-        — Input 3: Rear pigtail → Raspberry Pi mini-HDMI<br>
-        — Input 4: Rear pigtail → spare (console, laptop)<br>
-        Output: Rear pigtail → long HDMI cable (~2.5m) to G9<br>
-        <strong>Selection buttons:</strong> Most 4×1 HDMI switches have 4 individual buttons on the body. Remove the enclosure, install PCB inside 1U housing, align the 4 buttons with holes drilled in the panel face. LEDs per port show active input. Simon builds this himself — see below for parts.
+        2U blank panel at U3–U4 (89mm tall). Seven labeled zones left→right:
+        <code style="display:block;margin:8px 0;padding:8px;background:var(--surface-2);border-radius:6px;font-size:11px;">| HDMI [▶][1][2][3][4] | OptiPlex 2A+1C | Gaming PC 4A+2C | Charge 2A+2C | Phones [3.5] | Mic In [XLR][XLR] | Power [~][~] |</code>
+        <strong>HDMI zone:</strong> 4×1 switch PCB inside, front HDMI-A socket (Input 1), 4 select buttons drilled through, 3 rear input pigtails (OptiPlex / Pi / spare), 1 output pigtail ~2.5m → G9.<br>
+        <strong>OptiPlex zone:</strong> 2× USB-A + 1× USB-C → USB hub inside → 1 rear cable → OptiPlex 7020 USB.<br>
+        <strong>Gaming PC zone:</strong> 4× USB-A + 2× USB-C (two rows) → USB hub inside → 1 rear cable → Gaming PC USB.<br>
+        <strong>Charge zone:</strong> 2× USB-A + 2× USB-C → 65W USB charger inside. Power only, no data. For phones, tablets, headsets.<br>
+        <strong>Phones zone:</strong> 3.5mm TRS female → internal pigtail (3.5mm→6.35mm, ~0.3m) → XR18 headphone out. 6.35mm adapter clipped to panel face.<br>
+        <strong>Mic In zone:</strong> 2× Neutrik XLR/TRS combo jack. Left (PC·Mic): rear pigtail → PC audio in. Right (XR18·Ch): rear pigtail → XR18 channel 1/2. Both accept XLR or 6.35mm TRS.<br>
+        <strong>Power zone:</strong> 2× Schuko panel-mount socket (~45×45mm cutout each) → wired to PDU. 10A per socket. Convenience outlets, front-accessible.
       </div>
       <div class="alt">
-        <strong>5a — 1U panel blank (Adam Hall 87221STL):</strong> <a href="https://www.thomann.de/de/adam_hall_87221stl_urackblende_1_he.htm" target="_blank">thomann.de ~€4</a><br>
-        <strong>5b — HDMI 4×1 switch (4 individual buttons, IR remote):</strong> Amazon ~€25 — search "HDMI Switch 4x1 4K 60Hz individual button" — look for units where the 4 buttons are on the top/side face so they can be exposed through panel cutouts. Examples: Avedio links, NÖRDIC, or generic 4K 60Hz 4×1 box<br>
-        <strong>5c — 5× HDMI panel-mount female connectors (bulkhead):</strong> Amazon ~€12 — 1 for front input, 4 for rear (3 inputs + 1 output pigtail adapter)<br>
-        <strong>5d — USB hub internal (4-port, powered, small):</strong> Amazon ~€12 — mounts inside panel<br>
-        <strong>5e — Short HDMI cables × 5 (30cm, internal pigtails):</strong> Amazon ~€12<br>
-        <strong>5f — Fasgear retractable USB-C cable reels (2-pack):</strong> <a href="https://www.amazon.de/Fasgear-Einziehbares-USB-C-Kabel/dp/B0DXDYZQSM" target="_blank">Amazon ~€18–22</a><br>
-        <strong>Misc (M3 screws, velcro, epoxy):</strong> ~€5
+        <strong>5a — 2U blank panel (Adam Hall 87222STL):</strong> thomann.de ~€6<br>
+        <strong>5b — HDMI 4×1 switch PCB (4 buttons, 4K60):</strong> Amazon ~€25 — search "HDMI Switch 4x1 4K 60Hz individual button" — Avedio links, NÖRDIC, or similar; must have 4 individual buttons on body<br>
+        <strong>5c — HDMI bulkhead female connectors × 5:</strong> Amazon ~€12 — 1 front + 4 rear pigtails<br>
+        <strong>5d — USB hub (OptiPlex), powered 4-port:</strong> Amazon ~€12<br>
+        <strong>5e — USB hub (Gaming PC), powered 7-port:</strong> Amazon ~€18<br>
+        <strong>5f — USB 65W multi-port charger (Anker or similar, 6-port):</strong> Amazon ~€20<br>
+        <strong>5g — Short HDMI cables × 5 (30cm, internal):</strong> Amazon ~€12<br>
+        <strong>5h — Neutrik NCJ6FI-S XLR/TRS combo jack × 2:</strong> thomann.de ~€6 each<br>
+        <strong>5i — Schuko flush-mount socket × 2 (Kaiser 1218 or similar):</strong> Amazon/Conrad ~€8 each<br>
+        <strong>5j — 3.5mm TRS female panel-mount chassis jack:</strong> Amazon ~€3<br>
+        <strong>5k — Fasgear retractable USB-C reels (2-pack):</strong> <a href="https://www.amazon.de/Fasgear-Einziehbares-USB-C-Kabel/dp/B0DXDYZQSM" target="_blank">Amazon ~€18–22</a><br>
+        <strong>Misc (M3 screws, velcro, short cable pigtails, epoxy):</strong> ~€10
       </div>
     </div>
 
     <!-- 6 — Rack PDU -->
     <div class="comp">
       <h3>6 · Rack PDU 1U (8× Schuko) <span class="price-tag">~40–55 €</span></h3>
-      <div class="why">1U rack-mount power distribution unit. Provides power to all rack devices (XR18, Sony, OptiPlex, switch, hub). Look for 8× Schuko (EU Type F) with surge protection and circuit breaker. Sits at U20 (bottom of rack) for easy mains cable routing. Brands: Bachmann Kabelkanal, Logilink, or generic 19" PDU.</div>
+      <div class="why">1U rack-mount power distribution unit. Provides power to all rack devices (XR18, Sony, OptiPlex, switch, hub). Look for 8× Schuko (EU Type F) with surge protection and circuit breaker. Sits at U7. Mains cable exits from U21 bottom cable management. Brands: Bachmann Kabelkanal, Logilink, or generic 19" PDU.</div>
       <div class="alt">
         <strong>Amazon:</strong> search "PDU 1U 19 Zoll Steckdosenleiste 8 Schuko" ~€40–55 &nbsp;|&nbsp; <a href="https://www.reichelt.de/de/de/shop/search/?SEARCH=PDU+1U+19" target="_blank">Reichelt: PDU 19" 1HE</a>
       </div>
@@ -136,7 +140,7 @@
     <!-- 7 — Rack cable management -->
     <div class="comp">
       <h3>7 · Rack Cable Management 1U × 2 (horizontal) <span class="price-tag">~15–20 € each</span></h3>
-      <div class="why">One at U1 (top — guides cables entering from above/rear), one at U20 (bottom — before the PDU, for power cable loops). Prevents cable chaos. Brush-strip type preferred — pass through cables while maintaining airflow. Standard: 1U 19" horizontal cable organizer with D-ring guides.</div>
+      <div class="why">One at U1 (top — guides cables entering from above/rear), one at U21 (bottom — for power cable loops below PDU). Prevents cable chaos. Brush-strip type preferred — pass through cables while maintaining airflow. Standard: 1U 19" horizontal cable organizer with D-ring guides.</div>
       <div class="alt">
         <strong>Amazon:</strong> "1U Kabelmanagement 19 Zoll" ~€15–20 &nbsp;|&nbsp; <strong>Patch Panel 24-port 1U:</strong> ~€20 (optional but highly recommended — clean termination point for Cat6 runs to rack)
       </div>
@@ -208,12 +212,18 @@
         <tr><td>4</td><td>TP-Link TL-SG2210P (rack, PoE) — €98 Geizhals</td><td>Geizhals</td><td class="price">~98 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>4b</td><td>TP-Link TL-SG108 (living room)</td><td>Amazon</td><td class="price">~15 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>4c</td><td>TP-Link EAP670 WAP (WiFi 6, PoE)</td><td>Amazon</td><td class="price">~80 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr><td>5a</td><td>1U blank panel (Adam Hall 87221STL)</td><td>Thomann</td><td class="price">4 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr><td>5b</td><td>HDMI 4×1 switch (4 buttons, 4K60)</td><td>Amazon</td><td class="price">~25 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
+        <tr><td>5a</td><td>2U blank panel (Adam Hall 87222STL)</td><td>Thomann</td><td class="price">~6 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5b</td><td>HDMI 4×1 switch PCB (4 buttons, 4K60)</td><td>Amazon</td><td class="price">~25 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>5c</td><td>HDMI panel-mount bulkhead × 5</td><td>Amazon</td><td class="price">~12 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr><td>5d</td><td>USB hub internal 4-port powered</td><td>Amazon</td><td class="price">~12 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
+        <tr><td>5d</td><td>USB hub 4-port powered (OptiPlex zone)</td><td>Amazon</td><td class="price">~12 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>5e</td><td>Short HDMI cables 30cm × 5 (panel internals)</td><td>Amazon</td><td class="price">~12 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>5f</td><td>Fasgear retractable USB-C reels (2-pack)</td><td>Amazon</td><td class="price">~20 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
+        <tr><td>5g</td><td>USB hub 7-port powered (Gaming PC zone)</td><td>Amazon</td><td class="price">~18 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5h</td><td>USB 65W multi-port charger, 6-port (Charge zone)</td><td>Amazon</td><td class="price">~20 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5i</td><td>Neutrik NCJ6FI-S XLR/TRS combo jack × 2 (Mic In zone)</td><td>Thomann</td><td class="price">~12 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5j</td><td>Schuko flush-mount socket × 2, ~45×45mm (Kaiser 1218)</td><td>Conrad / Amazon</td><td class="price">~16 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5k</td><td>3.5mm TRS female panel-mount jack (Phones zone)</td><td>Amazon</td><td class="price">~3 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
+        <tr><td>5l</td><td>Panel misc (M3 screws, velcro, pigtail cables, epoxy)</td><td>Amazon</td><td class="price">~10 €</td><td style="color:#f59e0b;font-size:12px;">order</td></tr>
         <tr><td>6</td><td>Rack PDU 1U 8× Schuko</td><td>Amazon / Reichelt</td><td class="price">~45 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>7</td><td>1U horizontal cable management × 2</td><td>Amazon</td><td class="price">~35 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>7b</td><td>Patch panel 24-port 1U (optional)</td><td>Amazon</td><td class="price">~20 €</td><td style="color:#34d399;font-size:12px;">optional</td></tr>
@@ -224,8 +234,8 @@
         <tr><td>9</td><td>DIY side panels (plywood + pegboard + hooks + plants)</td><td>Baumarkt + Amazon</td><td class="price">~45–65 €</td><td style="color:#818cf8;font-size:12px;">after rack arrives</td></tr>
         <tr><td>10</td><td>Audio cables (3.5mm→Cinch, XLR→RCA, TOSLINK)</td><td>Amazon / Thomann</td><td class="price">~32 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
         <tr><td>11</td><td>Broadlink RM4 mini × 2</td><td>Amazon</td><td class="price">~40 €</td><td style="color:#34d399;font-size:12px;">ready</td></tr>
-        <tr class="total"><td colspan="3">Phase 1 total (without rack, with XR18)</td><td class="price">~820–900 €</td><td></td></tr>
-        <tr class="total"><td colspan="3">Phase 1 total (without rack, X1204USB fallback)</td><td class="price">~590–650 €</td><td></td></tr>
+        <tr class="total"><td colspan="3">Phase 1 total (without rack, with XR18)</td><td class="price">~870–960 €</td><td></td></tr>
+        <tr class="total"><td colspan="3">Phase 1 total (without rack, X1204USB fallback)</td><td class="price">~640–710 €</td><td></td></tr>
         <tr class="total"><td colspan="3">Rack (parents, used)</td><td class="price">~200–350 €</td><td></td></tr>
       </tbody>
     </table>
