@@ -70,7 +70,7 @@
 
   <!-- ===== RACK LAYOUT ===== -->
   <section class="section">
-    <h2><span class="num">RACK</span>Slot Plan — 36U (U1–U21 active, U22–U36 reserve)</h2>
+    <h2><span class="num">RACK</span>Slot Plan — 36U (U1–U23 active, U24–U36 reserve)</h2>
     <div class="diagram">
 <span class="hi">╔═══════════════════════════════════════════════════════╗</span>
 <span class="hi">║  Brother DCP-L2620DW (printer — on top of rack)      ║  ← flat top surface, 6.3 kg, accessible at ~145 cm</span>
@@ -80,28 +80,30 @@
 <span class="hi">║  U3 ║</span>                                                  ║  ↑ DIY Custom Panel 2U
 <span class="hi">║  U4 ║</span> DIY Custom Panel 2U                              ║  ← HDMI | OptiPlex | Gaming PC | Charge | Phones | Mic In | Power
 <span class="hi">║  U5 ║</span> TP-Link TL-SG2210P (1U rack-native, 8× PoE)    ║  ← rack ears included, all ports rear
-<span class="hi">║  U6 ║</span> Behringer XR18 (1U rack-native, WiFi)           ║  ← 18ch digital mixer, all 18 ports rear
-<span class="hi">║  U7 ║</span> Rack PDU 1U (8× Schuko)                         ║  ← powers all rack devices
+<span class="hi">║  U6 ║</span>                                                  ║  ↑ Behringer XR18 (3U rack-native, WiFi)
+<span class="hi">║  U7 ║</span> Behringer XR18                                   ║  ← 18ch digital mixer, all 18 ports rear
+<span class="hi">║  U8 ║</span>                                                  ║  ↓
+<span class="hi">║  U9 ║</span> Rack PDU 1U (8× Schuko)                         ║  ← powers all rack devices
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║  U8 ║</span>                                                  ║  ↑ Sony STR-DB790 (145 mm = 3U clearance + 1U shelf)
-<span class="hi">║  U9 ║</span> Sony STR-DB790 (on shelf at U11)                 ║  ← all I/O rear, no rack-ear conversion
-<span class="hi">║ U10 ║</span>                                                  ║  ↓ shelf bracket at U11
-<span class="hi">║ U11 ║</span> 1U Shelf (Sony)                                  ║
+<span class="hi">║ U10 ║</span>                                                  ║  ↑ Sony STR-DB790 (145 mm = 3U clearance + 1U shelf)
+<span class="hi">║ U11 ║</span> Sony STR-DB790 (on shelf at U13)                 ║  ← all I/O rear, no rack-ear conversion
+<span class="hi">║ U12 ║</span>                                                  ║  ↓ shelf bracket at U13
+<span class="hi">║ U13 ║</span> 1U Shelf (Sony)                                  ║
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U12 ║</span>                                                  ║  ↑ OptiPlex SFF on side (100 mm = ~2U clearance)
-<span class="hi">║ U13 ║</span> OptiPlex 7020 SFF + Pi 4 + 10.1" Display         ║  ← display overlaps blank ~13 cm face, ~40 cm total width
-<span class="hi">║ U14 ║</span> 1U Shelf (OptiPlex + Pi)                         ║  ← shelf bracket
+<span class="hi">║ U14 ║</span>                                                  ║  ↑ OptiPlex SFF on side (93 mm = ~2U clearance)
+<span class="hi">║ U15 ║</span> OptiPlex 7020 SFF + Pi 4 + 10.1" Display         ║  ← display overlaps blank ~13 cm face, ~40 cm total width
+<span class="hi">║ U16 ║</span> 1U Shelf (OptiPlex + Pi)                         ║  ← shelf bracket
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U15 ║</span>                                                  ║
-<span class="hi">║ U16 ║</span> ░░░░░░░░░ RESERVE ░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║
+<span class="hi">║ U17 ║</span>                                                  ║
+<span class="hi">║ U18 ║</span> ░░░░░░░░░ RESERVE ░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U17 ║</span>                                                  ║  Phase 2 ↓
-<span class="hi">║ U18 ║</span> Dell PowerEdge R720 (Phase 2, 2U)               ║  ← ~72 cm deep → needs ≥100 cm rack
+<span class="hi">║ U19 ║</span>                                                  ║  Phase 2 ↓
+<span class="hi">║ U20 ║</span> Dell PowerEdge R720 (Phase 2, 2U)               ║  ← ~74 cm deep → needs ≥100 cm rack
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U19 ║</span>                                                  ║
-<span class="hi">║ U20 ║</span> APC Smart-UPS 750RM (Phase 2, 2U)               ║  ← holds R720 for ~5–8 min on battery
+<span class="hi">║ U21 ║</span>                                                  ║
+<span class="hi">║ U22 ║</span> APC Smart-UPS 750RM (Phase 2, 2U)               ║  ← holds R720 for ~5–8 min on battery
 <span class="hi">╠═════╬═════════════════════════════════════════════════╣</span>
-<span class="hi">║ U21 ║</span> Horizontal Cable Management (bottom)             ║  ← mains cable entry from PDU
+<span class="hi">║ U23 ║</span> Horizontal Cable Management (bottom)             ║  ← mains cable entry from PDU
 <span class="hi">╚═════╩═════════════════════════════════════════════════╝</span>
     </div>
     <div class="callout info">
@@ -171,7 +173,7 @@
     <div class="comp">
       <h3>Open Frame Server Rack 36U, ≥100 cm deep <span class="price-tag">~250–300 € (parents)</span></h3>
       <div class="why">Open 4-post frame, no doors or panels. ≥100 cm depth for Dell R720 (~72 cm) + rear cable management. Options: Rackmatic Open2 WJ073 38U 600×1000mm ~€294 (Cablematic, confirmed in stock), VEVOR.de open frame 36U ~€150–200 (check vevor.de/open-frame-server-rack-c_10750 directly). DIY side panels bolt to posts separately (see item below).</div>
-      <div class="alt"><strong>Cablematic:</strong> <a href="https://cablematic.com/es/producto/armario-rack-abierto-de-4-postes-mobil-1000-mm-38u-600x1000-open2-mobiRack-WJ073/" target="_blank">Rackmatic WJ073 38U ~€294</a> &nbsp;|&nbsp; <strong>VEVOR:</strong> vevor.de → open frame server rack → filter 36U</div>
+      <div class="alt"><strong>Cablematic:</strong> <a href="https://cablematic.com/en/products/rack-cabinet-19-open-38u-600x1000x1820mm-white-open2-mobirack-by-rackmatic-WJ073/" target="_blank">Rackmatic WJ073 38U ~€294</a> &nbsp;|&nbsp; <strong>VEVOR:</strong> vevor.de → open frame server rack → filter 36U</div>
     </div>
 
     <div class="comp">
@@ -182,7 +184,7 @@
 
     <div class="comp">
       <h3>Behringer X Air XR18 <span class="price-tag">~290 € brandneu</span></h3>
-      <div class="why">True 1U rack unit — no shelf needed, all 18 channels + outputs at rear. WiFi control via app (X Air Edit, iOS/Android/PC). <strong>6× Aux-Sends = bis zu 7 unabhängige Zonen</strong> — entscheidend für Multi-Room-Audio (Schlafzimmer, Wohnzimmer, weitere Räume). 18-Kanal USB-Audiointerface für DAW-Recording. Gefunden: Sounds Market Berlin, brandneu (nie geöffnet), €275 + Versand ~€15.</div>
+      <div class="why">3U rack unit — no shelf needed, all 18 channels + outputs at rear. WiFi control via app (X Air Edit, iOS/Android/PC). <strong>6× Aux-Sends = bis zu 7 unabhängige Zonen</strong> — entscheidend für Multi-Room-Audio (Schlafzimmer, Wohnzimmer, weitere Räume). 18-Kanal USB-Audiointerface für DAW-Recording. Gefunden: Sounds Market Berlin, brandneu (nie geöffnet), €275 + Versand ~€15.</div>
       <div class="alt">
         <strong>Gefunden (brandneu):</strong> soundsmarket.com — €275 + Versandkosten, Berlin, Abholung möglich<br>
         <strong>Neu (Vergleich):</strong> <a href="https://www.thomann.de/de/behringer_x_air_xr18.htm" target="_blank">thomann.de — €375</a>
@@ -205,7 +207,7 @@
 
     <div class="comp">
       <h3>Rack PDU 1U (8× Schuko) <span class="price-tag">~40–55 €</span></h3>
-      <div class="why">1U rack-mount power strip at U7. Powers XR18, Sony, OptiPlex, switch, Pi, panel (including Schuko outlets on DIY panel face). Surge protection + circuit breaker. Mains cable runs along bottom of rack from U21 cable management.</div>
+      <div class="why">1U rack-mount power strip at U9. Powers XR18, Sony, OptiPlex, switch, Pi, panel (including Schuko outlets on DIY panel face). Surge protection + circuit breaker. Mains cable runs along bottom of rack from U23 cable management.</div>
       <div class="alt"><strong>Amazon:</strong> search "PDU 1U 19 Zoll 8 Schuko" ~€40–55 &nbsp;|&nbsp; <a href="https://www.reichelt.de/de/de/shop/search/?SEARCH=PDU+1U+19" target="_blank">Reichelt PDU 19" 1HE</a></div>
     </div>
 
